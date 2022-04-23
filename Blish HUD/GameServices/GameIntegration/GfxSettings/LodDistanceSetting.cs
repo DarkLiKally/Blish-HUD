@@ -1,37 +1,37 @@
-﻿namespace Blish_HUD.GameIntegration.GfxSettings {
-    public readonly struct LodDistanceSetting {
+﻿namespace Blish_HUD.GameIntegration.GfxSettings; 
 
-        private const string SETTING_LOW    = "low";
-        private const string SETTING_MEDIUM = "medium";
-        private const string SETTING_HIGH   = "high";
-        private const string SETTING_ULTRA  = "ultra";
+public readonly struct LodDistanceSetting {
 
-        private string Value { get; }
+    private const string SETTING_LOW    = "low";
+    private const string SETTING_MEDIUM = "medium";
+    private const string SETTING_HIGH   = "high";
+    private const string SETTING_ULTRA  = "ultra";
 
-        private LodDistanceSetting(string value) {
-            this.Value = string.Intern(value);
-        }
+    private string Value { get; }
 
-        public static LodDistanceSetting? FromString(string value) {
-            return value switch {
-                SETTING_LOW => Low,
-                SETTING_MEDIUM => Medium,
-                SETTING_HIGH => High,
-                SETTING_ULTRA => Ultra,
-                _ => new LodDistanceSetting(value)
-            };
-        }
-
-        public override int  GetHashCode()      => this.Value.GetHashCode();
-        public override bool Equals(object obj) => obj != null && obj.GetHashCode() == GetHashCode();
-
-        public static implicit operator string(LodDistanceSetting lodDistanceSetting) => lodDistanceSetting.Value;
-        public static implicit operator LodDistanceSetting(string value)              => new LodDistanceSetting(value);
-
-        public static LodDistanceSetting Low    { get; } = new LodDistanceSetting(SETTING_LOW);
-        public static LodDistanceSetting Medium { get; } = new LodDistanceSetting(SETTING_MEDIUM);
-        public static LodDistanceSetting High   { get; } = new LodDistanceSetting(SETTING_HIGH);
-        public static LodDistanceSetting Ultra  { get; } = new LodDistanceSetting(SETTING_ULTRA);
-
+    private LodDistanceSetting(string value) {
+        this.Value = string.Intern(value);
     }
+
+    public static LodDistanceSetting? FromString(string value) {
+        return value switch {
+            SETTING_LOW => Low,
+            SETTING_MEDIUM => Medium,
+            SETTING_HIGH => High,
+            SETTING_ULTRA => Ultra,
+            _ => new LodDistanceSetting(value)
+        };
+    }
+
+    public override int  GetHashCode()      => this.Value.GetHashCode();
+    public override bool Equals(object obj) => obj != null && obj.GetHashCode() == GetHashCode();
+
+    public static implicit operator string(LodDistanceSetting lodDistanceSetting) => lodDistanceSetting.Value;
+    public static implicit operator LodDistanceSetting(string value)              => new(value);
+
+    public static LodDistanceSetting Low    { get; } = new(SETTING_LOW);
+    public static LodDistanceSetting Medium { get; } = new(SETTING_MEDIUM);
+    public static LodDistanceSetting High   { get; } = new(SETTING_HIGH);
+    public static LodDistanceSetting Ultra  { get; } = new(SETTING_ULTRA);
+
 }

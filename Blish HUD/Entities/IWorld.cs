@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Blish_HUD.Entities {
-    public interface IWorld {
+namespace Blish_HUD.Entities; 
 
-        IEnumerable<IEntity> Entities { get; }
+public interface IWorld {
 
-        void AddEntity(IEntity entity);
+    IEnumerable<IEntity> Entities { get; }
 
-        void AddEntities(IEnumerable<IEntity> entities);
+    void AddEntity(IEntity entity);
 
-        void RemoveEntity(IEntity entity);
+    void AddEntities(IEnumerable<IEntity> entities);
 
-        void RemoveEntities(IEnumerable<IEntity> entities);
+    void RemoveEntity(IEntity entity);
 
-    }
+    void RemoveEntities(IEnumerable<IEntity> entities);
+
 }

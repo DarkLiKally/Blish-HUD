@@ -1,10 +1,8 @@
-﻿namespace Blish_HUD.ArcDps {
+﻿namespace Blish_HUD.ArcDps; 
 
-    public sealed class MessageData {
+public sealed class MessageData {
 
-        public byte[]         Message;
-        public AsyncUserToken Token;
-
-    }
+    public byte[]         Message;
+    public AsyncUserToken Token;
 
 }

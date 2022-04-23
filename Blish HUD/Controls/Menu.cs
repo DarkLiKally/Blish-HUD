@@ -4,145 +4,145 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Blish_HUD.Controls {
-    public class Menu : Container, IMenuItem {
+namespace Blish_HUD.Controls; 
 
-        private const int DEFAULT_ITEM_HEIGHT = 32;
+public class Menu : Container, IMenuItem {
 
-        #region Load Static
+    private const int DEFAULT_ITEM_HEIGHT = 32;
 
-        private static readonly Texture2D _textureMenuItemFade = Content.GetTexture("156044");
+    #region Load Static
 
-        #endregion
+    private static readonly Texture2D _textureMenuItemFade = Content.GetTexture("156044");
 
-        #region Events
+    #endregion
 
-        public event EventHandler<ControlActivatedEventArgs> ItemSelected;
-        protected virtual void OnItemSelected(ControlActivatedEventArgs e) {
-            this.ItemSelected?.Invoke(this, e);
-        }
+    #region Events
 
-        #endregion
-
-        protected int _menuItemHeight = DEFAULT_ITEM_HEIGHT;
-        public int MenuItemHeight {
-            get => _menuItemHeight;
-            set {
-                if (!SetProperty(ref _menuItemHeight, value)) return;
-
-                foreach (var childMenuItem in _children.Cast<IMenuItem>()) {
-                    childMenuItem.MenuItemHeight = value;
-                }
-            }
-        }
-
-        protected bool _shouldShift = false;
-        public bool ShouldShift {
-            get => _shouldShift;
-            set => SetProperty(ref _shouldShift, value, true);
-        }
-
-        private bool _canSelect;
-        public bool CanSelect {
-            get => _canSelect;
-            set => SetProperty(ref _canSelect, value);
-        }
-
-        bool IMenuItem.Selected => false;
-
-        private MenuItem _selectedMenuItem;
-        public MenuItem SelectedMenuItem => _selectedMenuItem;
-
-        void IMenuItem.Select() {
-            throw new InvalidOperationException($"The root {nameof(Menu)} instance can not be selected.");
-        }
-
-        public void Select(MenuItem menuItem, List<IMenuItem> itemPath) {
-            if (!_canSelect) {
-                itemPath.ForEach(i => i.Deselect());
-                return;
-            }
-
-            foreach (var item in this.GetDescendants().Cast<IMenuItem>().Except(itemPath)) {
-                item.Deselect();
-            }
-
-            _selectedMenuItem = menuItem;
-
-            OnItemSelected(new ControlActivatedEventArgs(menuItem));
-        }
-
-        public void Select(MenuItem menuItem) {
-            menuItem.Select();
-        }
-
-        void IMenuItem.Deselect() {
-            Select(null, null);
-        }
-
-        protected override void OnResized(ResizedEventArgs e) {
-            foreach (var childMenuItem in _children) {
-                childMenuItem.Width = e.CurrentSize.X;
-            }
-
-            base.OnResized(e);
-        }
-
-        protected override void OnChildAdded(ChildChangedEventArgs e) {
-            if (!(e.ChangedChild is IMenuItem newChild)) {
-                e.Cancel = true;
-                return;
-            }
-
-            newChild.MenuItemHeight = this.MenuItemHeight;
-
-            e.ChangedChild.Width = this.Width;
-
-            // We'll bind the top of the control to the bottom of the last control we added
-            var lastItem = _children.LastOrDefault();
-            if (lastItem != null) {
-                Adhesive.Binding.CreateOneWayBinding(() => e.ChangedChild.Top,
-                                                     () => lastItem.Bottom, applyLeft: true);
-            }
-
-            ShouldShift = e.ResultingChildren.Any(mi => {
-                                                      MenuItem cmi = (MenuItem) mi;
-
-                                                      return cmi.CanCheck || cmi.Icon != null || cmi.Children.Any();
-                                                  });
-
-            base.OnChildAdded(e);
-        }
-
-        public MenuItem AddMenuItem(string text, Texture2D icon = null) {
-            return new MenuItem(text) {
-                Icon   = icon,
-                Parent = this
-            };
-        }
-
-        public override void UpdateContainer(GameTime gameTime) {
-            int totalItemHeight = 0;
-
-            foreach (var child in _children) {
-                totalItemHeight = Math.Max(child.Bottom, totalItemHeight);
-            }
-
-            this.Height = totalItemHeight;
-        }
-
-        public override void PaintBeforeChildren(SpriteBatch spriteBatch, Rectangle bounds) {
-            // Draw items dark every other one
-            for (int sec = 0; sec < _size.Y / MenuItemHeight; sec += 2) {
-                spriteBatch.DrawOnCtrl(this,
-                                       _textureMenuItemFade,
-                                       new Rectangle(0,
-                                                     MenuItemHeight * sec - VerticalScrollOffset,
-                                                     _size.X,
-                                                     MenuItemHeight),
-                                       Color.Black * 0.7f);
-            }
-        }
-
+    public event EventHandler<ControlActivatedEventArgs> ItemSelected;
+    protected virtual void OnItemSelected(ControlActivatedEventArgs e) {
+        this.ItemSelected?.Invoke(this, e);
     }
+
+    #endregion
+
+    protected int _menuItemHeight = DEFAULT_ITEM_HEIGHT;
+    public int MenuItemHeight {
+        get => _menuItemHeight;
+        set {
+            if (!SetProperty(ref _menuItemHeight, value)) return;
+
+            foreach (var childMenuItem in _children.Cast<IMenuItem>()) {
+                childMenuItem.MenuItemHeight = value;
+            }
+        }
+    }
+
+    protected bool _shouldShift = false;
+    public bool ShouldShift {
+        get => _shouldShift;
+        set => SetProperty(ref _shouldShift, value, true);
+    }
+
+    private bool _canSelect;
+    public bool CanSelect {
+        get => _canSelect;
+        set => SetProperty(ref _canSelect, value);
+    }
+
+    bool IMenuItem.Selected => false;
+
+    private MenuItem _selectedMenuItem;
+    public  MenuItem SelectedMenuItem => _selectedMenuItem;
+
+    void IMenuItem.Select() {
+        throw new InvalidOperationException($"The root {nameof(Menu)} instance can not be selected.");
+    }
+
+    public void Select(MenuItem menuItem, List<IMenuItem> itemPath) {
+        if (!_canSelect) {
+            itemPath.ForEach(i => i.Deselect());
+            return;
+        }
+
+        foreach (var item in this.GetDescendants().Cast<IMenuItem>().Except(itemPath)) {
+            item.Deselect();
+        }
+
+        _selectedMenuItem = menuItem;
+
+        OnItemSelected(new ControlActivatedEventArgs(menuItem));
+    }
+
+    public void Select(MenuItem menuItem) {
+        menuItem.Select();
+    }
+
+    void IMenuItem.Deselect() {
+        Select(null, null);
+    }
+
+    protected override void OnResized(ResizedEventArgs e) {
+        foreach (var childMenuItem in _children) {
+            childMenuItem.Width = e.CurrentSize.X;
+        }
+
+        base.OnResized(e);
+    }
+
+    protected override void OnChildAdded(ChildChangedEventArgs e) {
+        if (!(e.ChangedChild is IMenuItem newChild)) {
+            e.Cancel = true;
+            return;
+        }
+
+        newChild.MenuItemHeight = this.MenuItemHeight;
+
+        e.ChangedChild.Width = this.Width;
+
+        // We'll bind the top of the control to the bottom of the last control we added
+        var lastItem = _children.LastOrDefault();
+        if (lastItem != null) {
+            Adhesive.Binding.CreateOneWayBinding(() => e.ChangedChild.Top,
+                                                 () => lastItem.Bottom, applyLeft: true);
+        }
+
+        ShouldShift = e.ResultingChildren.Any(mi => {
+            MenuItem cmi = (MenuItem) mi;
+
+            return cmi.CanCheck || cmi.Icon != null || cmi.Children.Any();
+        });
+
+        base.OnChildAdded(e);
+    }
+
+    public MenuItem AddMenuItem(string text, Texture2D icon = null) {
+        return new MenuItem(text) {
+            Icon   = icon,
+            Parent = this
+        };
+    }
+
+    public override void UpdateContainer(GameTime gameTime) {
+        int totalItemHeight = 0;
+
+        foreach (var child in _children) {
+            totalItemHeight = Math.Max(child.Bottom, totalItemHeight);
+        }
+
+        this.Height = totalItemHeight;
+    }
+
+    public override void PaintBeforeChildren(SpriteBatch spriteBatch, Rectangle bounds) {
+        // Draw items dark every other one
+        for (int sec = 0; sec < _size.Y / MenuItemHeight; sec += 2) {
+            spriteBatch.DrawOnCtrl(this,
+                                   _textureMenuItemFade,
+                                   new Rectangle(0,
+                                                 MenuItemHeight * sec - VerticalScrollOffset,
+                                                 _size.X,
+                                                 MenuItemHeight),
+                                   Color.Black * 0.7f);
+        }
+    }
+
 }

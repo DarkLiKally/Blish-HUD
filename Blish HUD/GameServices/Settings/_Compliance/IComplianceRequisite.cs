@@ -1,3 +1,3 @@
-﻿namespace Blish_HUD.Settings {
-    public interface IComplianceRequisite { /* NOOP */ }
-}
+﻿namespace Blish_HUD.Settings; 
+
+public interface IComplianceRequisite { /* NOOP */ }

@@ -7,247 +7,247 @@ using System.Xml;
 using Blish_HUD.GameIntegration.GfxSettings;
 using Blish_HUD.GameServices;
 
-namespace Blish_HUD.GameIntegration {
-    public class GfxSettingsIntegration : ServiceModule<GameIntegrationService> {
+namespace Blish_HUD.GameIntegration; 
 
-        private static readonly Logger Logger = Logger.GetLogger<GfxSettingsIntegration>();
+public class GfxSettingsIntegration : ServiceModule<GameIntegrationService> {
 
-        private const string GFXSETTINGS_PATH = "Guild Wars 2";
-        private const string GFXSETTINGS_NAME = "GFXSettings.Gw2-64.exe.xml";
+    private static readonly Logger Logger = Logger.GetLogger<GfxSettingsIntegration>();
 
-        private const string GFXS_TRUE = "true";
+    private const string GFXSETTINGS_PATH = "Guild Wars 2";
+    private const string GFXSETTINGS_NAME = "GFXSettings.Gw2-64.exe.xml";
 
-        private const int FILELOCKED_ATTEMPTS = 3;
+    private const string GFXS_TRUE = "true";
 
-        public event EventHandler<EventArgs> GfxSettingsReloaded;
+    private const int FILELOCKED_ATTEMPTS = 3;
 
-        /// <summary>
-        /// Indicates that we've successfully read and parsed the contents of the GFXSettings.Gw2-64.exe.xml file.
-        /// </summary>
-        public bool IsAvailable { get; private set; }
+    public event EventHandler<EventArgs> GfxSettingsReloaded;
 
-        public FrameLimitSetting? FrameLimit => GetStringEnumSetting(FrameLimitSetting.FromString);
+    /// <summary>
+    /// Indicates that we've successfully read and parsed the contents of the GFXSettings.Gw2-64.exe.xml file.
+    /// </summary>
+    public bool IsAvailable { get; private set; }
 
-        public ShadowsSetting? Shadows => GetStringEnumSetting(ShadowsSetting.FromString);
+    public FrameLimitSetting? FrameLimit => GetStringEnumSetting(FrameLimitSetting.FromString);
 
-        public ReflectionsSetting? Reflections => GetStringEnumSetting(ReflectionsSetting.FromString);
+    public ShadowsSetting? Shadows => GetStringEnumSetting(ShadowsSetting.FromString);
 
-        public CharModelLimitSetting? CharModelLimit => GetStringEnumSetting(CharModelLimitSetting.FromString);
+    public ReflectionsSetting? Reflections => GetStringEnumSetting(ReflectionsSetting.FromString);
 
-        public ScreenModeSetting? ScreenMode => GetStringEnumSetting(ScreenModeSetting.FromString);
+    public CharModelLimitSetting? CharModelLimit => GetStringEnumSetting(CharModelLimitSetting.FromString);
 
-        public AntiAliasingSetting? AntiAliasing => GetStringEnumSetting(AntiAliasingSetting.FromString);
+    public ScreenModeSetting? ScreenMode => GetStringEnumSetting(ScreenModeSetting.FromString);
 
-        public TextureDetailSetting? TextureDetail => GetStringEnumSetting(TextureDetailSetting.FromString);
+    public AntiAliasingSetting? AntiAliasing => GetStringEnumSetting(AntiAliasingSetting.FromString);
 
-        public AnimationSetting? Animation => GetStringEnumSetting(AnimationSetting.FromString);
+    public TextureDetailSetting? TextureDetail => GetStringEnumSetting(TextureDetailSetting.FromString);
 
-        public CharModelQualitySetting? CharModelQuality => GetStringEnumSetting(CharModelQualitySetting.FromString);
+    public AnimationSetting? Animation => GetStringEnumSetting(AnimationSetting.FromString);
 
-        public EnvironmentSetting? Environment => GetStringEnumSetting(EnvironmentSetting.FromString);
+    public CharModelQualitySetting? CharModelQuality => GetStringEnumSetting(CharModelQualitySetting.FromString);
 
-        public LodDistanceSetting? LodDistance => GetStringEnumSetting(LodDistanceSetting.FromString);
+    public EnvironmentSetting? Environment => GetStringEnumSetting(EnvironmentSetting.FromString);
 
-        public PostProcSetting? PostProc => GetStringEnumSetting(PostProcSetting.FromString);
+    public LodDistanceSetting? LodDistance => GetStringEnumSetting(LodDistanceSetting.FromString);
 
-        public SamplingSetting? Sampling => GetStringEnumSetting(SamplingSetting.FromString);
+    public PostProcSetting? PostProc => GetStringEnumSetting(PostProcSetting.FromString);
 
-        public ShadersSetting? Shaders => GetStringEnumSetting(ShadersSetting.FromString);
+    public SamplingSetting? Sampling => GetStringEnumSetting(SamplingSetting.FromString);
 
-        public float? Gamma => GetFloatSetting();
+    public ShadersSetting? Shaders => GetStringEnumSetting(ShadersSetting.FromString);
 
-        /// <summary>
-        /// Indicates the value of the in-game setting "Effect LOD" which is described in game as:
-        /// "Limit detail of particle effects."
-        /// </summary>
-        public bool? EffectLod => GetBoolSetting();
+    public float? Gamma => GetFloatSetting();
 
-        /// <summary>
-        /// Indicates the value of the in-game setting "High-Res Character Textures" which is described in game as:
-        /// "Enables high-resolution textures for NPCs and other player character modules.  Requires a map change to take effect."
-        /// </summary>
-        public bool? HighResCharacter => GetBoolSetting();
+    /// <summary>
+    /// Indicates the value of the in-game setting "Effect LOD" which is described in game as:
+    /// "Limit detail of particle effects."
+    /// </summary>
+    public bool? EffectLod => GetBoolSetting();
 
-        /// <summary>
-        /// Indicates the value of the in-game setting "Best Texture Filtering" which is described in game as:
-        /// "Override the default texture filtering to use the best."
-        /// </summary>
-        public bool? BestTextureFiltering => GetBoolSetting();
+    /// <summary>
+    /// Indicates the value of the in-game setting "High-Res Character Textures" which is described in game as:
+    /// "Enables high-resolution textures for NPCs and other player character modules.  Requires a map change to take effect."
+    /// </summary>
+    public bool? HighResCharacter => GetBoolSetting();
 
-        /// <summary>
-        /// Indicates the value of the in-game setting "Depth Blur" which is described in game as:
-        /// "Enables depth blurring effects for a stylized appearance on distance objects."
-        /// </summary>
-        public bool? DepthBlur => GetBoolSetting();
+    /// <summary>
+    /// Indicates the value of the in-game setting "Best Texture Filtering" which is described in game as:
+    /// "Override the default texture filtering to use the best."
+    /// </summary>
+    public bool? BestTextureFiltering => GetBoolSetting();
 
-        /// <summary>
-        /// Indicates the value of the in-game setting "Vertical Sync" which is described in game as:
-        /// "Forces the framerate to syncrhronize with the monitor's refresh rate.  Helps elimiate tearing artifacts but can result in artificually low framerates."
-        /// </summary>
-        public bool? VerticalSync => GetBoolSetting();
+    /// <summary>
+    /// Indicates the value of the in-game setting "Depth Blur" which is described in game as:
+    /// "Enables depth blurring effects for a stylized appearance on distance objects."
+    /// </summary>
+    public bool? DepthBlur => GetBoolSetting();
 
-        /// <summary>
-        /// Indicates the value of the in-game setting "DPI Scaling" which is described in game as:
-        /// "Enables additional scaling of the UI according to your system settings."
-        /// </summary>
-        public bool? DpiScaling => GetBoolSetting();
+    /// <summary>
+    /// Indicates the value of the in-game setting "Vertical Sync" which is described in game as:
+    /// "Forces the framerate to syncrhronize with the monitor's refresh rate.  Helps elimiate tearing artifacts but can result in artificually low framerates."
+    /// </summary>
+    public bool? VerticalSync => GetBoolSetting();
 
-        private readonly Dictionary<string, string> _settings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+    /// <summary>
+    /// Indicates the value of the in-game setting "DPI Scaling" which is described in game as:
+    /// "Enables additional scaling of the UI according to your system settings."
+    /// </summary>
+    public bool? DpiScaling => GetBoolSetting();
 
-        private FileSystemWatcher _fileSystemWatcher;
+    private readonly Dictionary<string, string> _settings = new(StringComparer.InvariantCultureIgnoreCase);
 
-        private bool _loadLock;
+    private FileSystemWatcher _fileSystemWatcher;
 
-        public GfxSettingsIntegration(GameIntegrationService service) : base(service) { /* NOOP */ }
+    private bool _loadLock;
 
-        public override void Load() {
-            _service.Gw2Instance.Gw2Started += Gw2Proc_Gw2Started;
+    public GfxSettingsIntegration(GameIntegrationService service) : base(service) { /* NOOP */ }
 
-            EnableWatchDir();
+    public override void Load() {
+        _service.Gw2Instance.Gw2Started += Gw2Proc_Gw2Started;
 
-            Task.Run(LoadGfxSettings);
+        EnableWatchDir();
+
+        Task.Run(LoadGfxSettings);
+    }
+
+    private bool? GetBoolSetting([CallerMemberName] string settingName = null) {
+        if (settingName == null) throw new ArgumentNullException(nameof(settingName));
+
+        return _settings.TryGetValue(settingName, out string result)
+                   ? result == GFXS_TRUE
+                   : default(bool?);
+    }
+
+    private float? GetFloatSetting([CallerMemberName] string settingName = null) {
+        if (settingName == null) throw new ArgumentNullException(nameof(settingName));
+
+        return _settings.TryGetValue(settingName, out string result)
+                   ? InvariantUtil.TryParseFloat(result, out float floatResult)
+                         ? floatResult
+                         : default(float?)
+                   : default;
+    }    
+
+    private T? GetStringEnumSetting<T>(Func<string, T?> getSettingFunc, [CallerMemberName] string settingName = null) where T : struct {
+        if (settingName == null) throw new ArgumentNullException(nameof(settingName));
+
+        return _settings.TryGetValue(settingName, out string result)
+                   ? getSettingFunc(result)
+                   : null;
+    }
+
+    private void EnableWatchDir() {
+        string gw2AppDataPath = Path.Combine(_service.Gw2Instance.AppDataPath, GFXSETTINGS_PATH);
+
+        if (!Directory.Exists(gw2AppDataPath)) {
+            Logger.Warn("Guild Wars 2 AppData path '{appDataPath}' does not appear to exist so GfxSettings will not be loaded.", gw2AppDataPath);
+            return;
         }
 
-        private bool? GetBoolSetting([CallerMemberName] string settingName = null) {
-            if (settingName == null) throw new ArgumentNullException(nameof(settingName));
+        _fileSystemWatcher = new FileSystemWatcher {
+            Path                  = gw2AppDataPath,
+            NotifyFilter          = NotifyFilters.LastWrite,
+            Filter                = GFXSETTINGS_NAME,
+            EnableRaisingEvents   = true,
+            IncludeSubdirectories = false
+        };
 
-            return _settings.TryGetValue(settingName, out string result)
-                       ? result == GFXS_TRUE
-                       : default(bool?);
+        _fileSystemWatcher.Changed += GfxSettingsFileChanged;
+    }
+
+    private bool _changedDebounce = false;
+
+    private async void GfxSettingsFileChanged(object sender, FileSystemEventArgs e) {
+        // This typically fires twice
+        if (_changedDebounce) {
+            return;
         }
 
-        private float? GetFloatSetting([CallerMemberName] string settingName = null) {
-            if (settingName == null) throw new ArgumentNullException(nameof(settingName));
+        _changedDebounce = true;
 
-            return _settings.TryGetValue(settingName, out string result)
-                       ? InvariantUtil.TryParseFloat(result, out float floatResult)
-                             ? floatResult
-                             : default(float?)
-                       : default;
-        }    
+        // GW2 is usually still locked when we detect the file change, so we give it a chance to let go
+        await Task.Delay(100);
+        await LoadGfxSettings();
 
-        private T? GetStringEnumSetting<T>(Func<string, T?> getSettingFunc, [CallerMemberName] string settingName = null) where T : struct {
-            if (settingName == null) throw new ArgumentNullException(nameof(settingName));
+        _changedDebounce = false;
+    }
 
-            return _settings.TryGetValue(settingName, out string result)
-                       ? getSettingFunc(result)
-                       : null;
+    private bool TryGetGfxSettingsFileStream(out FileStream gfxSettingsFileStream) {
+        string path = Path.Combine(_service.Gw2Instance.AppDataPath, GFXSETTINGS_PATH, GFXSETTINGS_NAME);
+
+        gfxSettingsFileStream = null;
+
+        if (!File.Exists(path)) {
+            Logger.Debug($"Failed to load GfxSettings from path '{path}'.");
+            return false;
         }
 
-        private void EnableWatchDir() {
-            string gw2AppDataPath = Path.Combine(_service.Gw2Instance.AppDataPath, GFXSETTINGS_PATH);
+        gfxSettingsFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 8192, true);
 
-            if (!Directory.Exists(gw2AppDataPath)) {
-                Logger.Warn("Guild Wars 2 AppData path '{appDataPath}' does not appear to exist so GfxSettings will not be loaded.", gw2AppDataPath);
-                return;
-            }
+        return gfxSettingsFileStream.CanRead;
+    }
 
-            _fileSystemWatcher = new FileSystemWatcher {
-                Path                  = gw2AppDataPath,
-                NotifyFilter          = NotifyFilters.LastWrite,
-                Filter                = GFXSETTINGS_NAME,
-                EnableRaisingEvents   = true,
-                IncludeSubdirectories = false
-            };
-
-            _fileSystemWatcher.Changed += GfxSettingsFileChanged;
+    private async Task LoadGfxSettings() {
+        if (_loadLock) {
+            return;
         }
 
-        private bool _changedDebounce = false;
+        _loadLock = true;
 
-        private async void GfxSettingsFileChanged(object sender, FileSystemEventArgs e) {
-            // This typically fires twice
-            if (_changedDebounce) {
-                return;
-            }
+        await LoadGfxSettings(FILELOCKED_ATTEMPTS);
 
-            _changedDebounce = true;
+        _loadLock = false;
+    }
 
-            // GW2 is usually still locked when we detect the file change, so we give it a chance to let go
-            await Task.Delay(100);
-            await LoadGfxSettings();
+    private async Task LoadGfxSettings(int remainingAttempts) {
+        try {
+            if (TryGetGfxSettingsFileStream(out var gfxSettingsFileStream)) {
+                using (var gfxSettingsXmlReader = XmlReader.Create(gfxSettingsFileStream, new XmlReaderSettings { Async = true })) {
+                    await gfxSettingsXmlReader.MoveToContentAsync();
 
-            _changedDebounce = false;
-        }
+                    while (gfxSettingsXmlReader.ReadToFollowing("OPTION")) {
+                        gfxSettingsXmlReader.MoveToAttribute("Name");
+                        string settingName = await gfxSettingsXmlReader.GetValueAsync();
+                        gfxSettingsXmlReader.MoveToAttribute("Value");
+                        string settingValue = await gfxSettingsXmlReader.GetValueAsync();
 
-        private bool TryGetGfxSettingsFileStream(out FileStream gfxSettingsFileStream) {
-            string path = Path.Combine(_service.Gw2Instance.AppDataPath, GFXSETTINGS_PATH, GFXSETTINGS_NAME);
+                        _settings[settingName] = settingValue;
 
-            gfxSettingsFileStream = null;
+                        Logger.Trace($"Loaded {settingName} = {settingValue} from GSA.");
 
-            if (!File.Exists(path)) {
-                Logger.Debug($"Failed to load GfxSettings from path '{path}'.");
-                return false;
-            }
+                        this.IsAvailable = true;
 
-            gfxSettingsFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 8192, true);
-
-            return gfxSettingsFileStream.CanRead;
-        }
-
-        private async Task LoadGfxSettings() {
-            if (_loadLock) {
-                return;
-            }
-
-            _loadLock = true;
-
-            await LoadGfxSettings(FILELOCKED_ATTEMPTS);
-
-            _loadLock = false;
-        }
-
-        private async Task LoadGfxSettings(int remainingAttempts) {
-            try {
-                if (TryGetGfxSettingsFileStream(out var gfxSettingsFileStream)) {
-                    using (var gfxSettingsXmlReader = XmlReader.Create(gfxSettingsFileStream, new XmlReaderSettings { Async = true })) {
-                        await gfxSettingsXmlReader.MoveToContentAsync();
-
-                        while (gfxSettingsXmlReader.ReadToFollowing("OPTION")) {
-                            gfxSettingsXmlReader.MoveToAttribute("Name");
-                            string settingName = await gfxSettingsXmlReader.GetValueAsync();
-                            gfxSettingsXmlReader.MoveToAttribute("Value");
-                            string settingValue = await gfxSettingsXmlReader.GetValueAsync();
-
-                            _settings[settingName] = settingValue;
-
-                            Logger.Trace($"Loaded {settingName} = {settingValue} from GSA.");
-
-                            this.IsAvailable = true;
-
-                            GfxSettingsReloaded?.Invoke(this, EventArgs.Empty);
-                        }
+                        GfxSettingsReloaded?.Invoke(this, EventArgs.Empty);
                     }
-
-                    gfxSettingsFileStream.Dispose();
-
-                    Logger.Debug("Finished parsing GSA file.");
                 }
-            } catch (IOException ex) {
-                if (remainingAttempts > 0) {
-                    // GW2 is likely still locking the file and should be done very soon.
-                    Logger.Debug("Failed to read GSA file.  Trying again...");
-                    await Task.Delay(100);
-                    await LoadGfxSettings(remainingAttempts - 1);
-                } else {
-                    Logger.Warn(ex, $"Failed to parse GfxSettings after {FILELOCKED_ATTEMPTS} attempts.");
-                }
-            } catch (Exception ex) {
-                Logger.Warn(ex, "Failed to parse GfxSettings.");
+
+                gfxSettingsFileStream.Dispose();
+
+                Logger.Debug("Finished parsing GSA file.");
             }
-        }
-
-        private async void Gw2Proc_Gw2Started(object sender, EventArgs e) {
-            await LoadGfxSettings();
-        }
-
-        public override void Unload() {
-            _service.Gw2Instance.Gw2Started -= Gw2Proc_Gw2Started;
-
-            if (_fileSystemWatcher != null) {
-                _fileSystemWatcher.Changed -= GfxSettingsFileChanged;
-                _fileSystemWatcher.Dispose();
+        } catch (IOException ex) {
+            if (remainingAttempts > 0) {
+                // GW2 is likely still locking the file and should be done very soon.
+                Logger.Debug("Failed to read GSA file.  Trying again...");
+                await Task.Delay(100);
+                await LoadGfxSettings(remainingAttempts - 1);
+            } else {
+                Logger.Warn(ex, $"Failed to parse GfxSettings after {FILELOCKED_ATTEMPTS} attempts.");
             }
+        } catch (Exception ex) {
+            Logger.Warn(ex, "Failed to parse GfxSettings.");
+        }
+    }
+
+    private async void Gw2Proc_Gw2Started(object sender, EventArgs e) {
+        await LoadGfxSettings();
+    }
+
+    public override void Unload() {
+        _service.Gw2Instance.Gw2Started -= Gw2Proc_Gw2Started;
+
+        if (_fileSystemWatcher != null) {
+            _fileSystemWatcher.Changed -= GfxSettingsFileChanged;
+            _fileSystemWatcher.Dispose();
         }
     }
 }

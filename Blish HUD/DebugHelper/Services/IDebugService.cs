@@ -1,11 +1,9 @@
-﻿namespace Blish_HUD.DebugHelper.Services {
+﻿namespace Blish_HUD.DebugHelper.Services; 
 
-    internal interface IDebugService {
+internal interface IDebugService {
 
-        void Start();
+    void Start();
 
-        void Stop();
-
-    }
+    void Stop();
 
 }

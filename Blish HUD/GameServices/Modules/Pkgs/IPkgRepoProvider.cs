@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Blish_HUD.Modules.Pkgs {
-    public interface IPkgRepoProvider {
+namespace Blish_HUD.Modules.Pkgs; 
 
-        Task<bool> Load(IProgress<string> progress);
+public interface IPkgRepoProvider {
 
-        IEnumerable<PkgManifest> GetPkgManifests();
+    Task<bool> Load(IProgress<string> progress);
 
-        IEnumerable<PkgManifest> GetPkgManifests(IEnumerable<Func<PkgManifest, bool>> filters);
+    IEnumerable<PkgManifest> GetPkgManifests();
 
-        IEnumerable<(string OptionName, Action<bool> OptionAction, bool IsToggle, bool IsChecked)> GetExtraOptions();
+    IEnumerable<PkgManifest> GetPkgManifests(IEnumerable<Func<PkgManifest, bool>> filters);
 
-    }
+    IEnumerable<(string OptionName, Action<bool> OptionAction, bool IsToggle, bool IsChecked)> GetExtraOptions();
+
 }

@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel;
 
-namespace Blish_HUD.Graphics {
-    public enum DpiMethod : int {
-        [Description("Automatic - Sync With Game")]
-        SyncWithGame = 0,
+namespace Blish_HUD.Graphics; 
 
-        [Description("Enabled - Use Game DPI")]
-        UseGameDpi = 1,
+public enum DpiMethod : int {
+    [Description("Automatic - Sync With Game")]
+    SyncWithGame = 0,
 
-        [Description("Disabled - Never Scale")]
-        NoScaling = 2
-    }
+    [Description("Enabled - Use Game DPI")]
+    UseGameDpi = 1,
+
+    [Description("Disabled - Never Scale")]
+    NoScaling = 2
 }

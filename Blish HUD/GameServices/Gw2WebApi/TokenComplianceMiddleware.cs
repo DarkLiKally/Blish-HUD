@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 using Gw2Sharp.WebApi.Http;
 using Gw2Sharp.WebApi.Middleware;
 
-namespace Blish_HUD.Gw2WebApi {
-    public class TokenComplianceMiddleware : IWebApiMiddleware {
+namespace Blish_HUD.Gw2WebApi; 
 
-        private readonly TokenBucket _bucket;
+public class TokenComplianceMiddleware : IWebApiMiddleware {
 
-        public TokenComplianceMiddleware(TokenBucket tokenBucket) {
-            _bucket = tokenBucket;
-        }
+    private readonly TokenBucket _bucket;
 
-        public async Task<IWebApiResponse> OnRequestAsync(MiddlewareContext context, Func<MiddlewareContext, CancellationToken, Task<IWebApiResponse>> callNext, CancellationToken cancellationToken = new CancellationToken()) {
-            return await _bucket.ConsumeCompliant(() => callNext(context, cancellationToken)).ConfigureAwait(false);
-        }
-
+    public TokenComplianceMiddleware(TokenBucket tokenBucket) {
+        _bucket = tokenBucket;
     }
+
+    public async Task<IWebApiResponse> OnRequestAsync(MiddlewareContext context, Func<MiddlewareContext, CancellationToken, Task<IWebApiResponse>> callNext, CancellationToken cancellationToken = new()) {
+        return await _bucket.ConsumeCompliant(() => callNext(context, cancellationToken)).ConfigureAwait(false);
+    }
+
 }

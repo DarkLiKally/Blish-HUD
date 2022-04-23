@@ -4,92 +4,90 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Blish_HUD.Settings {
+namespace Blish_HUD.Settings; 
 
-    public abstract class SettingEntry : INotifyPropertyChanged {
+public abstract class SettingEntry : INotifyPropertyChanged {
 
-        protected const string SETTINGTYPE_KEY  = "T";
-        protected const string SETTINGNAME_KEY  = "Key";
-        protected const string SETTINGVALUE_KEY = "Value";
+    protected const string SETTINGTYPE_KEY  = "T";
+    protected const string SETTINGNAME_KEY  = "Key";
+    protected const string SETTINGVALUE_KEY = "Value";
 
-        public class SettingEntryConverter : JsonConverter<SettingEntry> {
+    public class SettingEntryConverter : JsonConverter<SettingEntry> {
 
-            private static readonly Logger Logger = Logger.GetLogger<SettingEntryConverter>();
+        private static readonly Logger Logger = Logger.GetLogger<SettingEntryConverter>();
 
-            public override void WriteJson(JsonWriter writer, SettingEntry value, JsonSerializer serializer) {
-                var entryObject = new JObject();
+        public override void WriteJson(JsonWriter writer, SettingEntry value, JsonSerializer serializer) {
+            var entryObject = new JObject();
 
-                var entryType = value.GetSettingType();
+            var entryType = value.GetSettingType();
 
-                entryObject.Add(SETTINGTYPE_KEY,  $"{entryType.FullName}, {entryType.Assembly.GetName().Name}");
-                entryObject.Add(SETTINGNAME_KEY,  value.EntryKey);
-                entryObject.Add(SETTINGVALUE_KEY, JToken.FromObject(value.GetSettingValue(), serializer));
+            entryObject.Add(SETTINGTYPE_KEY,  $"{entryType.FullName}, {entryType.Assembly.GetName().Name}");
+            entryObject.Add(SETTINGNAME_KEY,  value.EntryKey);
+            entryObject.Add(SETTINGVALUE_KEY, JToken.FromObject(value.GetSettingValue(), serializer));
 
-                entryObject.WriteTo(writer);
-            }
-
-            public override SettingEntry ReadJson(JsonReader reader, Type objectType, SettingEntry existingValue, bool hasExistingValue, JsonSerializer serializer) {
-                var jObj = JObject.Load(reader);
-
-                string entryTypeString = jObj[SETTINGTYPE_KEY].Value<string>();
-                var    entryType       = Type.GetType(entryTypeString);
-
-                if (entryType == null) {
-                    Logger.Warn("Failed to load setting of missing type '{settingDefinedType}'.", entryTypeString);
-
-                    return null;
-                }
-
-                var entryGeneric = Activator.CreateInstance(typeof(SettingEntry<>).MakeGenericType(entryType));
-
-                serializer.Populate(jObj.CreateReader(), entryGeneric);
-
-                return entryGeneric as SettingEntry;
-            }
-
+            entryObject.WriteTo(writer);
         }
 
-        [JsonIgnore]
-        public Func<string> GetDescriptionFunc { get; set; } = () => null;
+        public override SettingEntry ReadJson(JsonReader reader, Type objectType, SettingEntry existingValue, bool hasExistingValue, JsonSerializer serializer) {
+            var jObj = JObject.Load(reader);
 
-        [JsonIgnore]
-        public Func<string> GetDisplayNameFunc { get; set; } = () => null;
+            string entryTypeString = jObj[SETTINGTYPE_KEY].Value<string>();
+            var    entryType       = Type.GetType(entryTypeString);
 
+            if (entryType == null) {
+                Logger.Warn("Failed to load setting of missing type '{settingDefinedType}'.", entryTypeString);
 
-        [JsonIgnore]
-        public string Description => this.GetDescriptionFunc();
+                return null;
+            }
 
-        [JsonIgnore]
-        public string DisplayName => this.GetDisplayNameFunc();
+            var entryGeneric = Activator.CreateInstance(typeof(SettingEntry<>).MakeGenericType(entryType));
 
-        /// <summary>
-        /// The unique key used to identify the <see cref="SettingEntry"/> in the <see cref="SettingCollection"/>.
-        /// </summary>
-        [JsonProperty(SETTINGNAME_KEY)]
-        public string EntryKey { get; protected set; }
+            serializer.Populate(jObj.CreateReader(), entryGeneric);
 
-        [JsonIgnore]
-        public bool SessionDefined { get; internal set; }
-
-        protected abstract Type GetSettingType();
-
-        protected abstract object GetSettingValue();
-
-        [JsonIgnore]
-        public bool IsNull => this.GetSettingValue() == null;
-
-        [JsonIgnore]
-        public Type SettingType => GetSettingType();
-
-        #region Property Binding
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return entryGeneric as SettingEntry;
         }
 
-        #endregion
     }
 
+    [JsonIgnore]
+    public Func<string> GetDescriptionFunc { get; set; } = () => null;
+
+    [JsonIgnore]
+    public Func<string> GetDisplayNameFunc { get; set; } = () => null;
+
+
+    [JsonIgnore]
+    public string Description => this.GetDescriptionFunc();
+
+    [JsonIgnore]
+    public string DisplayName => this.GetDisplayNameFunc();
+
+    /// <summary>
+    /// The unique key used to identify the <see cref="SettingEntry"/> in the <see cref="SettingCollection"/>.
+    /// </summary>
+    [JsonProperty(SETTINGNAME_KEY)]
+    public string EntryKey { get; protected set; }
+
+    [JsonIgnore]
+    public bool SessionDefined { get; internal set; }
+
+    protected abstract Type GetSettingType();
+
+    protected abstract object GetSettingValue();
+
+    [JsonIgnore]
+    public bool IsNull => this.GetSettingValue() == null;
+
+    [JsonIgnore]
+    public Type SettingType => GetSettingType();
+
+    #region Property Binding
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
 }

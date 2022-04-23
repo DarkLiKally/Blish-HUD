@@ -6,38 +6,38 @@ using Blish_HUD.GameServices;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Settings;
 
-namespace Blish_HUD.Overlay {
-    public class OverlaySettingsTab : ServiceModule<OverlayService>, ISettingsMenuRegistrar {
+namespace Blish_HUD.Overlay; 
 
-        public event EventHandler<EventArgs> RegistrarListChanged;
+public class OverlaySettingsTab : ServiceModule<OverlayService>, ISettingsMenuRegistrar {
 
-        private readonly List<(MenuItem MenuItem, Func<MenuItem, IView> ViewFunc, int Index)> _registeredMenuItems = new List<(MenuItem MenuItem, Func<MenuItem, IView> ViewFunc, int Index)>();
+    public event EventHandler<EventArgs> RegistrarListChanged;
 
-        public OverlaySettingsTab(OverlayService service) : base(service) { }
+    private readonly List<(MenuItem MenuItem, Func<MenuItem, IView> ViewFunc, int Index)> _registeredMenuItems = new();
 
-        public IView GetMenuItemView(MenuItem selectedMenuItem) {
-            foreach (var (menuItem, viewFunc, _) in _registeredMenuItems) {
-                if (menuItem == selectedMenuItem || menuItem.GetDescendants().Contains(selectedMenuItem)) {
-                    return viewFunc(selectedMenuItem);
-                }
+    public OverlaySettingsTab(OverlayService service) : base(service) { }
+
+    public IView GetMenuItemView(MenuItem selectedMenuItem) {
+        foreach (var (menuItem, viewFunc, _) in _registeredMenuItems) {
+            if (menuItem == selectedMenuItem || menuItem.GetDescendants().Contains(selectedMenuItem)) {
+                return viewFunc(selectedMenuItem);
             }
-
-            return null;
         }
 
-        public IEnumerable<MenuItem> GetSettingMenus() => _registeredMenuItems.OrderBy(mi => mi.Index).Select(mi => mi.MenuItem);
-
-        public void RegisterSettingMenu(MenuItem menuItem, Func<MenuItem, IView> viewFunc, int index = 0) {
-            _registeredMenuItems.Add((menuItem, viewFunc, index));
-
-            this.RegistrarListChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void RemoveSettingMenu(MenuItem menuItem) {
-            _registeredMenuItems.RemoveAll(r => r.MenuItem == menuItem);
-
-            this.RegistrarListChanged?.Invoke(this, EventArgs.Empty);
-        }
-
+        return null;
     }
+
+    public IEnumerable<MenuItem> GetSettingMenus() => _registeredMenuItems.OrderBy(mi => mi.Index).Select(mi => mi.MenuItem);
+
+    public void RegisterSettingMenu(MenuItem menuItem, Func<MenuItem, IView> viewFunc, int index = 0) {
+        _registeredMenuItems.Add((menuItem, viewFunc, index));
+
+        this.RegistrarListChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void RemoveSettingMenu(MenuItem menuItem) {
+        _registeredMenuItems.RemoveAll(r => r.MenuItem == menuItem);
+
+        this.RegistrarListChanged?.Invoke(this, EventArgs.Empty);
+    }
+
 }

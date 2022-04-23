@@ -123,7 +123,7 @@ public class ModulePkgRepoHandler : ServiceModule<ModuleService> {
     private void AcknowledgePendingModuleUpdates() {
         // Mark all updates as acknowledged
         foreach (var unacknowledgedModuleUpdate in this.UnacknowledgedUpdates) {
-            if (!_acknowledgedUpdates.TryGetSetting<string>(unacknowledgedModuleUpdate.Namespace, out SettingEntry<string> acknowledgementEntry)) {
+            if (!_acknowledgedUpdates.TryGetSetting(unacknowledgedModuleUpdate.Namespace, out SettingEntry<string> acknowledgementEntry)) {
                 acknowledgementEntry = _acknowledgedUpdates.DefineSetting(unacknowledgedModuleUpdate.Namespace, "0.0.0");
             }
 

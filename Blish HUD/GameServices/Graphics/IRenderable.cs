@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace Blish_HUD.Graphics {
-    public interface IRenderable {
+namespace Blish_HUD.Graphics; 
 
-        void Render(GraphicsDevice graphicsDevice);
+public interface IRenderable {
 
-    }
+    void Render(GraphicsDevice graphicsDevice);
+
 }

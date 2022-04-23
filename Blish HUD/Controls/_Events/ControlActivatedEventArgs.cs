@@ -1,14 +1,12 @@
 ﻿using System;
 
-namespace Blish_HUD.Controls {
+namespace Blish_HUD.Controls; 
 
-    public class ControlActivatedEventArgs : EventArgs {
-        public Control ActivatedControl { get; }
+public class ControlActivatedEventArgs : EventArgs {
+    public Control ActivatedControl { get; }
 
-        public ControlActivatedEventArgs(Control activatedControl) {
-            this.ActivatedControl = activatedControl;
-        }
-
+    public ControlActivatedEventArgs(Control activatedControl) {
+        this.ActivatedControl = activatedControl;
     }
 
 }

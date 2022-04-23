@@ -1,13 +1,13 @@
 ﻿using Blish_HUD.Graphics.UI;
 
-namespace Blish_HUD.Overlay.UI.Presenters {
-    public interface IConnectionStatusPresenter : IPresenter {
+namespace Blish_HUD.Overlay.UI.Presenters; 
 
-        string ConnectionName { get; }
+public interface IConnectionStatusPresenter : IPresenter {
 
-        bool Connected { get; }
+    string ConnectionName { get; }
 
-        string ConnectionDetails { get; }
+    bool Connected { get; }
 
-    }
+    string ConnectionDetails { get; }
+
 }

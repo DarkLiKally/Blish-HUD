@@ -1,15 +1,13 @@
 ﻿using System;
 
-namespace Blish_HUD.Controls {
+namespace Blish_HUD.Controls; 
 
-    public class ValueChangedEventArgs : EventArgs {
-        public string PreviousValue { get; }
-        public string CurrentValue  { get; }
+public class ValueChangedEventArgs : EventArgs {
+    public string PreviousValue { get; }
+    public string CurrentValue  { get; }
 
-        public ValueChangedEventArgs(string previousValue, string currentValue) {
-            this.PreviousValue = previousValue;
-            this.CurrentValue  = currentValue;
-        }
+    public ValueChangedEventArgs(string previousValue, string currentValue) {
+        this.PreviousValue = previousValue;
+        this.CurrentValue  = currentValue;
     }
-
 }

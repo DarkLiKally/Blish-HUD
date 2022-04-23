@@ -1,15 +1,14 @@
-﻿namespace Blish_HUD.Input {
+﻿namespace Blish_HUD.Input; 
 
-    delegate bool HandleMouseInputDelegate(MouseEventArgs mouseEventArgs);
+delegate bool HandleMouseInputDelegate(MouseEventArgs mouseEventArgs);
 
-    internal interface IMouseHookManager {
+internal interface IMouseHookManager {
 
-        bool EnableHook();
+    bool EnableHook();
 
-        void DisableHook();
+    void DisableHook();
 
-        void RegisterHandler(HandleMouseInputDelegate handleMouseInputCallback);
+    void RegisterHandler(HandleMouseInputDelegate handleMouseInputCallback);
 
-        void UnregisterHandler(HandleMouseInputDelegate handleMouseInputCallback);
-    }
+    void UnregisterHandler(HandleMouseInputDelegate handleMouseInputCallback);
 }

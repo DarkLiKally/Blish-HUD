@@ -1,13 +1,11 @@
-﻿namespace Blish_HUD.Controls {
+﻿namespace Blish_HUD.Controls; 
 
-    internal enum LayoutState {
+internal enum LayoutState {
 
-        Ready,
+    Ready,
 
-        SkipDraw,
+    SkipDraw,
 
-        Invalidated
-
-    }
+    Invalidated
 
 }

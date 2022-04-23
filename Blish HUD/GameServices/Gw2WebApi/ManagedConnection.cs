@@ -3,59 +3,59 @@ using Gw2Sharp;
 using Gw2Sharp.WebApi;
 using Gw2Sharp.WebApi.Caching;
 
-namespace Blish_HUD.Gw2WebApi {
-    public sealed class ManagedConnection {
+namespace Blish_HUD.Gw2WebApi; 
 
-        private static readonly Logger Logger = Logger.GetLogger<ManagedConnection>();
+public sealed class ManagedConnection {
 
-        private readonly Connection _internalConnection;
+    private static readonly Logger Logger = Logger.GetLogger<ManagedConnection>();
 
-        public IConnection Connection => _internalConnection;
+    private readonly Connection _internalConnection;
 
-        private readonly IGw2WebApiClient _internalClient;
+    public IConnection Connection => _internalConnection;
 
-        public IGw2WebApiClient Client => _internalClient;
+    private readonly IGw2WebApiClient _internalClient;
 
-        public ManagedConnection(string accessToken, TokenComplianceMiddleware tokenComplianceMiddle, ICacheMethod webApiCache, ICacheMethod renderCache = null, TimeSpan? renderCacheDuration = null) {
-            string ua = $"BlishHUD/{Program.OverlayVersion}";
+    public IGw2WebApiClient Client => _internalClient;
 
-            _internalConnection = new Connection(accessToken,
-                                                 GameService.Overlay.UserLocale.Value,
-                                                 webApiCache,
-                                                 renderCache,
-                                                 renderCacheDuration ?? TimeSpan.MaxValue,
-                                                 ua);
+    public ManagedConnection(string accessToken, TokenComplianceMiddleware tokenComplianceMiddle, ICacheMethod webApiCache, ICacheMethod renderCache = null, TimeSpan? renderCacheDuration = null) {
+        string ua = $"BlishHUD/{Program.OverlayVersion}";
+
+        _internalConnection = new Connection(accessToken,
+                                             GameService.Overlay.UserLocale.Value,
+                                             webApiCache,
+                                             renderCache,
+                                             renderCacheDuration ?? TimeSpan.MaxValue,
+                                             ua);
             
-            _internalConnection.Middleware.Add(tokenComplianceMiddle);
+        _internalConnection.Middleware.Add(tokenComplianceMiddle);
 
-            _internalClient = new Gw2Client(_internalConnection).WebApi;
+        _internalClient = new Gw2Client(_internalConnection).WebApi;
 
-            Logger.Debug("Created managed Gw2Sharp connection {useragent}.", ua);
+        Logger.Debug("Created managed Gw2Sharp connection {useragent}.", ua);
 
-            SetupListeners();
-        }
-
-        private void SetupListeners() {
-            GameService.Overlay.UserLocale.SettingChanged += UserLocaleOnSettingChanged;
-        }
-
-        private void UserLocaleOnSettingChanged(object sender, ValueChangedEventArgs<Locale> e) {
-            _internalConnection.Locale = e.NewValue;
-
-            Logger.Debug($"{nameof(ManagedConnection)} updated locale to {e.NewValue} (was {e.PreviousValue}).");
-        }
-
-        public bool SetApiKey(string apiKey) {
-            if (string.Equals(_internalConnection.AccessToken, apiKey)) return false;
-
-            _internalConnection.AccessToken = apiKey;
-
-            Logger.Debug(apiKey == string.Empty
-                             ? $"{_internalConnection.UserAgent} cleared API token."
-                             : $"{_internalConnection.UserAgent} updated API token to {apiKey}.");
-
-            return true;
-        }
-
+        SetupListeners();
     }
+
+    private void SetupListeners() {
+        GameService.Overlay.UserLocale.SettingChanged += UserLocaleOnSettingChanged;
+    }
+
+    private void UserLocaleOnSettingChanged(object sender, ValueChangedEventArgs<Locale> e) {
+        _internalConnection.Locale = e.NewValue;
+
+        Logger.Debug($"{nameof(ManagedConnection)} updated locale to {e.NewValue} (was {e.PreviousValue}).");
+    }
+
+    public bool SetApiKey(string apiKey) {
+        if (string.Equals(_internalConnection.AccessToken, apiKey)) return false;
+
+        _internalConnection.AccessToken = apiKey;
+
+        Logger.Debug(apiKey == string.Empty
+                         ? $"{_internalConnection.UserAgent} cleared API token."
+                         : $"{_internalConnection.UserAgent} updated API token to {apiKey}.");
+
+        return true;
+    }
+
 }

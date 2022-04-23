@@ -1,19 +1,19 @@
 ﻿using System;
 using AsyncWindowsClipboard;
 
-namespace Blish_HUD {
+namespace Blish_HUD; 
+
+/// <summary>
+/// Contains reference to a shared <see cref="WindowsClipboardService"/>
+/// used to make async calls to the Windows clipboard.
+/// </summary>
+public static class ClipboardUtil {
+
+    private static readonly WindowsClipboardService _clipboardService = new(TimeSpan.FromMilliseconds(20));
+
     /// <summary>
-    /// Contains reference to a shared <see cref="WindowsClipboardService"/>
+    /// A shared <see cref="WindowsClipboardService"/>
     /// used to make async calls to the Windows clipboard.
     /// </summary>
-    public static class ClipboardUtil {
-
-        private static readonly WindowsClipboardService _clipboardService = new WindowsClipboardService(TimeSpan.FromMilliseconds(20));
-
-        /// <summary>
-        /// A shared <see cref="WindowsClipboardService"/>
-        /// used to make async calls to the Windows clipboard.
-        /// </summary>
-        public static WindowsClipboardService WindowsClipboardService => _clipboardService;
-    }
+    public static WindowsClipboardService WindowsClipboardService => _clipboardService;
 }

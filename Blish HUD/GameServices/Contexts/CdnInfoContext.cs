@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Flurl.Http;
-using Flurl.Util;
 
 namespace Blish_HUD.Contexts; 
 

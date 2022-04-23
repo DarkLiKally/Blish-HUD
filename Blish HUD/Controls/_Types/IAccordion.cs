@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Blish_HUD.Controls; 
 
-namespace Blish_HUD.Controls {
-    public interface IAccordion {
+public interface IAccordion {
 
-        bool Collapsed { get; set; }
+    bool Collapsed { get; set; }
 
-        bool ToggleAccordionState();
+    bool ToggleAccordionState();
 
-        void Expand();
+    void Expand();
 
-        void Collapse();
+    void Collapse();
 
-    }
 }

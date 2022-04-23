@@ -2,22 +2,22 @@
 using Microsoft.Xna.Framework;
 using Blish_HUD.Controls;
 
-namespace Blish_HUD {
-    public static class ControlUtil {
+namespace Blish_HUD; 
 
-        public static Point GetControlBounds(Control[] controls) {
-            int farthestRight = 0;
-            int farthestDown  = 0;
+public static class ControlUtil {
 
-            foreach (var child in controls) {
-                if (child == null) continue;
+    public static Point GetControlBounds(Control[] controls) {
+        int farthestRight = 0;
+        int farthestDown  = 0;
 
-                farthestRight = Math.Max(farthestRight, child.Right);
-                farthestDown  = Math.Max(farthestDown,  child.Bottom);
-            }
+        foreach (var child in controls) {
+            if (child == null) continue;
 
-            return new Point(farthestRight, farthestDown);
+            farthestRight = Math.Max(farthestRight, child.Right);
+            farthestDown  = Math.Max(farthestDown,  child.Bottom);
         }
 
+        return new Point(farthestRight, farthestDown);
     }
+
 }

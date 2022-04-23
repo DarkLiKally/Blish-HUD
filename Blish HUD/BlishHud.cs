@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -38,10 +37,10 @@ public class BlishHud : Game {
     private SpriteBatch _basicSpriteBatch;
 
     public BlishHud() {
-        BlishHud.Instance = this;
+        Instance = this;
 
         this.ActiveGraphicsDeviceManager = new GraphicsDeviceManager(this);
-        this.ActiveGraphicsDeviceManager.PreparingDeviceSettings += delegate(object sender, PreparingDeviceSettingsEventArgs args) {
+        this.ActiveGraphicsDeviceManager.PreparingDeviceSettings += delegate(object _, PreparingDeviceSettingsEventArgs args) {
             args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
         };
 

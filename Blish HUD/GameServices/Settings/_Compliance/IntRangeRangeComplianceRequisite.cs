@@ -1,13 +1,13 @@
-﻿namespace Blish_HUD.Settings {
-    public readonly struct IntRangeRangeComplianceRequisite : INumericRangeComplianceRequisite<int> {
+﻿namespace Blish_HUD.Settings; 
 
-        public int MinValue { get; }
-        public int MaxValue { get; }
+public readonly struct IntRangeRangeComplianceRequisite : INumericRangeComplianceRequisite<int> {
 
-        public IntRangeRangeComplianceRequisite(int minValue, int maxValue) {
-            this.MinValue = minValue;
-            this.MaxValue = maxValue;
-        }
+    public int MinValue { get; }
+    public int MaxValue { get; }
 
+    public IntRangeRangeComplianceRequisite(int minValue, int maxValue) {
+        this.MinValue = minValue;
+        this.MaxValue = maxValue;
     }
+
 }

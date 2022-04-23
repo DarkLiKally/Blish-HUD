@@ -1,25 +1,23 @@
 ﻿using System;
 
-namespace Blish_HUD.Input {
+namespace Blish_HUD.Input; 
 
-    internal interface IHookManager : IDisposable {
+internal interface IHookManager : IDisposable {
 
-        void Load();
+    void Load();
 
-        void Unload();
+    void Unload();
 
-        bool EnableHook();
+    bool EnableHook();
 
-        void DisableHook();
+    void DisableHook();
 
-        void RegisterMouseHandler(HandleMouseInputDelegate handleMouseInputCallback);
+    void RegisterMouseHandler(HandleMouseInputDelegate handleMouseInputCallback);
 
-        void UnregisterMouseHandler(HandleMouseInputDelegate handleMouseInputCallback);
+    void UnregisterMouseHandler(HandleMouseInputDelegate handleMouseInputCallback);
 
-        void RegisterKeyboardHandler(HandleKeyboardInputDelegate handleKeyboardInputCallback);
+    void RegisterKeyboardHandler(HandleKeyboardInputDelegate handleKeyboardInputCallback);
 
-        void UnregisterKeyboardHandler(HandleKeyboardInputDelegate handleKeyboardInputCallback);
-
-    }
+    void UnregisterKeyboardHandler(HandleKeyboardInputDelegate handleKeyboardInputCallback);
 
 }

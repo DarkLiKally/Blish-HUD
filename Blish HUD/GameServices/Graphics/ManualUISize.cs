@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel;
 
-namespace Blish_HUD.Graphics {
-    public enum ManualUISize : int {
-        [Description("Automatic - Sync With Game")]
-        SyncWithGame = 0,
+namespace Blish_HUD.Graphics; 
 
-        [Description("Small")]
-        Small = 1,
+public enum ManualUISize : int {
+    [Description("Automatic - Sync With Game")]
+    SyncWithGame = 0,
 
-        [Description("Normal")]
-        Normal = 2,
+    [Description("Small")]
+    Small = 1,
 
-        [Description("Large")]
-        Large = 3,
+    [Description("Normal")]
+    Normal = 2,
 
-        [Description("Larger")]
-        Larger = 4
-    }
+    [Description("Large")]
+    Large = 3,
+
+    [Description("Larger")]
+    Larger = 4
 }

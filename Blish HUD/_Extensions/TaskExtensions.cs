@@ -2,24 +2,24 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Blish_HUD {
-    public static class TaskExtensions {
+namespace Blish_HUD; 
 
-        public static Action<T> Debounce<T>(this Action<T> func, int milliseconds = 300) {
-            CancellationTokenSource cancelTokenSource = null;
+public static class TaskExtensions {
 
-            return arg => {
-                cancelTokenSource?.Cancel();
-                cancelTokenSource = new CancellationTokenSource();
+    public static Action<T> Debounce<T>(this Action<T> func, int milliseconds = 300) {
+        CancellationTokenSource cancelTokenSource = null;
 
-                Task.Delay(milliseconds, cancelTokenSource.Token)
-                    .ContinueWith(t => {
-                        if (!t.IsCanceled) {
-                            func(arg);
-                        }
-                    }, TaskScheduler.Default);
-            };
-        }
+        return arg => {
+            cancelTokenSource?.Cancel();
+            cancelTokenSource = new CancellationTokenSource();
 
+            Task.Delay(milliseconds, cancelTokenSource.Token)
+                .ContinueWith(t => {
+                     if (!t.IsCanceled) {
+                         func(arg);
+                     }
+                 }, TaskScheduler.Default);
+        };
     }
+
 }

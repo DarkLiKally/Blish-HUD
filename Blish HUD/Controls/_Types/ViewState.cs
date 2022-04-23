@@ -1,7 +1,7 @@
-﻿namespace Blish_HUD.Controls {
-    public enum ViewState {
-        None,
-        Loading,
-        Loaded
-    }
+﻿namespace Blish_HUD.Controls; 
+
+public enum ViewState {
+    None,
+    Loading,
+    Loaded
 }

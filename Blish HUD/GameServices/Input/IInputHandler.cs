@@ -1,13 +1,11 @@
-﻿namespace Blish_HUD.Input {
+﻿namespace Blish_HUD.Input; 
 
-    public interface IInputHandler {
+public interface IInputHandler {
 
-        void Update();
+    void Update();
 
-        void OnEnable();
+    void OnEnable();
 
-        void OnDisable();
-
-    }
+    void OnDisable();
 
 }

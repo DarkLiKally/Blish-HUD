@@ -1,21 +1,21 @@
 ﻿using Blish_HUD.Settings;
 
-namespace Blish_HUD.Modules.Managers {
-    public class SettingsManager {
+namespace Blish_HUD.Modules.Managers; 
 
-        public SettingCollection ModuleSettings { get; }
+public class SettingsManager {
 
-        private SettingsManager(ModuleManager module) {
-            if (module.State.Settings == null) {
-                module.State.Settings = new SettingCollection(true);
-            }
+    public SettingCollection ModuleSettings { get; }
 
-            this.ModuleSettings = module.State.Settings;
+    private SettingsManager(ModuleManager module) {
+        if (module.State.Settings == null) {
+            module.State.Settings = new SettingCollection(true);
         }
 
-        public static SettingsManager GetModuleInstance(ModuleManager module) {
-            return new SettingsManager(module);
-        }
-
+        this.ModuleSettings = module.State.Settings;
     }
+
+    public static SettingsManager GetModuleInstance(ModuleManager module) {
+        return new SettingsManager(module);
+    }
+
 }

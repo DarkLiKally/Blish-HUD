@@ -2,44 +2,42 @@
 using Blish_HUD.DebugHelper.Models;
 using Blish_HUD.DebugHelper.Services;
 
-namespace Blish_HUD.Input {
+namespace Blish_HUD.Input; 
 
-    internal class DebugHelperMouseHookManager : DebugHelperInputHookManager<HandleMouseInputDelegate, MouseEventMessage>, IMouseHookManager {
+internal class DebugHelperMouseHookManager : DebugHelperInputHookManager<HandleMouseInputDelegate, MouseEventMessage>, IMouseHookManager {
 
-        public DebugHelperMouseHookManager(IMessageService debugHelperMessageService) : base(debugHelperMessageService) { }
+    public DebugHelperMouseHookManager(IMessageService debugHelperMessageService) : base(debugHelperMessageService) { }
 
-        protected override void HookCallback(MouseEventMessage message) {
-            MouseEventArgs mouseEventArgs = new MouseEventArgs(
-                                                               (MouseEventType)message.EventType, message.PointX, message.PointY, message.MouseData, message.Flags,
-                                                               message.Time, message.ExtraInfo
-                                                              );
+    protected override void HookCallback(MouseEventMessage message) {
+        MouseEventArgs mouseEventArgs = new MouseEventArgs(
+                                                           (MouseEventType)message.EventType, message.PointX, message.PointY, message.MouseData, message.Flags,
+                                                           message.Time, message.ExtraInfo
+                                                          );
 
-            bool isHandled = false;
+        bool isHandled = false;
 
-            lock (((IList) this.Handlers).SyncRoot) {
-                foreach (HandleMouseInputDelegate handler in this.Handlers) {
-                    isHandled = handler(mouseEventArgs);
-                    if (isHandled) break;
-                }
+        lock (((IList) this.Handlers).SyncRoot) {
+            foreach (HandleMouseInputDelegate handler in this.Handlers) {
+                isHandled = handler(mouseEventArgs);
+                if (isHandled) break;
             }
-
-            MouseResponseMessage response = new MouseResponseMessage {
-                Id        = message.Id,
-                IsHandled = isHandled
-            };
-
-            this.DebugHelperMessageService.Send(response);
         }
 
-        protected override void DummyHookCallback(MouseEventMessage message) {
-            MouseResponseMessage response = new MouseResponseMessage {
-                Id        = message.Id,
-                IsHandled = false
-            };
+        MouseResponseMessage response = new MouseResponseMessage {
+            Id        = message.Id,
+            IsHandled = isHandled
+        };
 
-            this.DebugHelperMessageService.Send(response);
-        }
+        this.DebugHelperMessageService.Send(response);
+    }
 
+    protected override void DummyHookCallback(MouseEventMessage message) {
+        MouseResponseMessage response = new MouseResponseMessage {
+            Id        = message.Id,
+            IsHandled = false
+        };
+
+        this.DebugHelperMessageService.Send(response);
     }
 
 }

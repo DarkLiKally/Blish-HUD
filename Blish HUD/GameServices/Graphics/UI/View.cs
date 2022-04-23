@@ -1,20 +1,20 @@
-﻿namespace Blish_HUD.Graphics.UI {
-    public abstract class View : View<IPresenter> {
+﻿namespace Blish_HUD.Graphics.UI; 
 
-        private static readonly NullPresenter _sharedNullPresenter = new NullPresenter();
+public abstract class View : View<IPresenter> {
 
-        protected View() {
-            this.Presenter = _sharedNullPresenter;
-        }
+    private static readonly NullPresenter _sharedNullPresenter = new();
 
-        protected View(IPresenter presenter) {
-            Presenter = presenter ?? _sharedNullPresenter;
-        }
-
-        // BREAKME: Avoids a breaking change, but is not necessary for anything recompiled.
-        public new View WithPresenter(IPresenter presenter) {
-            return base.WithPresenter(presenter) as View;
-        }
-
+    protected View() {
+        this.Presenter = _sharedNullPresenter;
     }
+
+    protected View(IPresenter presenter) {
+        Presenter = presenter ?? _sharedNullPresenter;
+    }
+
+    // BREAKME: Avoids a breaking change, but is not necessary for anything recompiled.
+    public new View WithPresenter(IPresenter presenter) {
+        return base.WithPresenter(presenter) as View;
+    }
+
 }

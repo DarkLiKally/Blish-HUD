@@ -3,44 +3,44 @@ using Gw2Sharp.Models;
 using Microsoft.Xna.Framework;
 using Gw2Sharp.Mumble;
 
-namespace Blish_HUD.Gw2Mumble {
-    public class CurrentMap {
+namespace Blish_HUD.Gw2Mumble; 
 
-        private readonly Gw2MumbleService _service;
+public class CurrentMap {
 
-        #region Events
+    private readonly Gw2MumbleService _service;
 
-        /// <summary>
-        /// Fires when the in-game map changes.
-        /// </summary>
-        public event EventHandler<ValueEventArgs<int>> MapChanged;
+    #region Events
 
-        private void OnMapChanged(ValueEventArgs<int> e) => MapChanged?.Invoke(this, e);
+    /// <summary>
+    /// Fires when the in-game map changes.
+    /// </summary>
+    public event EventHandler<ValueEventArgs<int>> MapChanged;
 
-        private int _prevId = -1;
+    private void OnMapChanged(ValueEventArgs<int> e) => MapChanged?.Invoke(this, e);
 
-        private void HandleEvents() {
-            MumbleEventImpl.CheckAndHandleEvent(ref _prevId, this.Id, OnMapChanged);
-        }
+    private int _prevId = -1;
 
-        #endregion
-
-        /// <inheritdoc cref="IGw2MumbleClient.MapId"/>
-        public int Id => _service.RawClient.MapId;
-
-        /// <inheritdoc cref="IGw2MumbleClient.MapType"/>
-        public MapType Type => _service.RawClient.MapType;
-
-        /// <inheritdoc cref="IGw2MumbleClient.IsCompetitiveMode"/>
-        public bool IsCompetitiveMode => _service.RawClient.IsCompetitiveMode;
-
-        internal CurrentMap(Gw2MumbleService service) {
-            _service = service;
-        }
-
-        internal void Update(GameTime gameTime) {
-            HandleEvents();
-        }
-
+    private void HandleEvents() {
+        MumbleEventImpl.CheckAndHandleEvent(ref _prevId, this.Id, OnMapChanged);
     }
+
+    #endregion
+
+    /// <inheritdoc cref="IGw2MumbleClient.MapId"/>
+    public int Id => _service.RawClient.MapId;
+
+    /// <inheritdoc cref="IGw2MumbleClient.MapType"/>
+    public MapType Type => _service.RawClient.MapType;
+
+    /// <inheritdoc cref="IGw2MumbleClient.IsCompetitiveMode"/>
+    public bool IsCompetitiveMode => _service.RawClient.IsCompetitiveMode;
+
+    internal CurrentMap(Gw2MumbleService service) {
+        _service = service;
+    }
+
+    internal void Update(GameTime gameTime) {
+        HandleEvents();
+    }
+
 }

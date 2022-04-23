@@ -1,11 +1,11 @@
-﻿namespace Blish_HUD.Settings {
-    public readonly struct SettingDisabledComplianceRequisite : IComplianceRequisite {
+﻿namespace Blish_HUD.Settings; 
 
-        public bool Disabled { get; }
+public readonly struct SettingDisabledComplianceRequisite : IComplianceRequisite {
 
-        public SettingDisabledComplianceRequisite(bool disabled) {
-            this.Disabled = disabled;
-        }
+    public bool Disabled { get; }
 
+    public SettingDisabledComplianceRequisite(bool disabled) {
+        this.Disabled = disabled;
     }
+
 }

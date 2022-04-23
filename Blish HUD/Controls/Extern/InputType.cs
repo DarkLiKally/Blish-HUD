@@ -1,9 +1,8 @@
-namespace Blish_HUD.Controls.Extern
+namespace Blish_HUD.Controls.Extern; 
+
+internal enum InputType : uint
 {
-    internal enum InputType : uint
-    {
-        MOUSE = 0,
-        KEYBOARD = 1,
-        HARDWARE = 2
-    }
+    MOUSE    = 0,
+    KEYBOARD = 1,
+    HARDWARE = 2
 }

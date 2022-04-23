@@ -1,18 +1,18 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Blish_HUD.Input.WinApi {
-    internal static class CursorExtern {
+namespace Blish_HUD.Input.WinApi; 
 
-        [DllImport("user32.dll")]
-        private static extern bool GetCursorInfo(ref CursorInfo pci);
+internal static class CursorExtern {
 
-        internal static CursorInfo GetCursorInfo() {
-            var pci = new CursorInfo {
-                CbSize = Marshal.SizeOf(typeof(CursorInfo))
-            };
-            GetCursorInfo(ref pci);
-            return pci;
-        }
+    [DllImport("user32.dll")]
+    private static extern bool GetCursorInfo(ref CursorInfo pci);
 
+    internal static CursorInfo GetCursorInfo() {
+        var pci = new CursorInfo {
+            CbSize = Marshal.SizeOf(typeof(CursorInfo))
+        };
+        GetCursorInfo(ref pci);
+        return pci;
     }
+
 }

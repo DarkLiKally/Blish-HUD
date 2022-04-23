@@ -6,153 +6,151 @@ using Microsoft.Xna.Framework;
 using Gw2Sharp.Mumble;
 using System.Text.RegularExpressions;
 
-namespace Blish_HUD {
+namespace Blish_HUD; 
 
-    public class Gw2MumbleService : GameService {
+public class Gw2MumbleService : GameService {
 
-        private const string DEFAULT_MUMBLEMAPNAME = "MumbleLink";
+    private const string DEFAULT_MUMBLEMAPNAME = "MumbleLink";
 
-        private static readonly Regex MUMBLE_LINK_REGEX = new Regex("^.+-mumble\\s+?\"?([^\" ]*)\"?.*$", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex MUMBLE_LINK_REGEX = new("^.+-mumble\\s+?\"?([^\" ]*)\"?.*$", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private readonly IGw2Client _gw2Client;
+    private readonly IGw2Client _gw2Client;
 
-        /// <inheritdoc cref="Gw2MumbleClient"/>
-        public IGw2MumbleClient RawClient { get; private set; }
+    /// <inheritdoc cref="Gw2MumbleClient"/>
+    public IGw2MumbleClient RawClient { get; private set; }
 
-        public string CurrentMumbleMapName { get; private set; } = DEFAULT_MUMBLEMAPNAME;
+    public string CurrentMumbleMapName { get; private set; } = DEFAULT_MUMBLEMAPNAME;
 
-        #region Categorized Mumble Data
+    #region Categorized Mumble Data
 
-        /// <summary>
-        /// Provides information about the Mumble connection and about the game instance in realtime.
-        /// </summary>
-        public Info Info { get; private set; }
+    /// <summary>
+    /// Provides information about the Mumble connection and about the game instance in realtime.
+    /// </summary>
+    public Info Info { get; private set; }
 
-        /// <summary>
-        /// Provides data about the active player's character in realtime.
-        /// </summary>
-        public PlayerCharacter PlayerCharacter { get; private set; }
+    /// <summary>
+    /// Provides data about the active player's character in realtime.
+    /// </summary>
+    public PlayerCharacter PlayerCharacter { get; private set; }
 
-        /// <summary>
-        /// Provides data about the active player's camera in realtime.
-        /// </summary>
-        public PlayerCamera PlayerCamera { get; private set; }
+    /// <summary>
+    /// Provides data about the active player's camera in realtime.
+    /// </summary>
+    public PlayerCamera PlayerCamera { get; private set; }
 
-        /// <summary>
-        /// Provides data about the in-game UI state in realtime.
-        /// </summary>
-        public UI UI { get; private set; }
+    /// <summary>
+    /// Provides data about the in-game UI state in realtime.
+    /// </summary>
+    public UI UI { get; private set; }
 
-        /// <summary>
-        /// Provides data about the map the player is currently on in realtime.
-        /// </summary>
-        public CurrentMap CurrentMap { get; private set; }
+    /// <summary>
+    /// Provides data about the map the player is currently on in realtime.
+    /// </summary>
+    public CurrentMap CurrentMap { get; private set; }
 
-        #endregion
+    #endregion
 
-        /// <inheritdoc cref="IGw2MumbleClient.IsAvailable"/>
-        public bool IsAvailable => this.RawClient.IsAvailable;
+    /// <inheritdoc cref="IGw2MumbleClient.IsAvailable"/>
+    public bool IsAvailable => this.RawClient.IsAvailable;
 
-        public TimeSpan TimeSinceTick { get; private set; }
+    public TimeSpan TimeSinceTick { get; private set; }
 
-        private int _delayedTicks = 0;
-        private int _prevTick = -1;
+    private int _delayedTicks;
+    private int _prevTick = -1;
 
-        public int Tick => this.RawClient.Tick;
+    public int Tick => this.RawClient.Tick;
 
-        internal Gw2MumbleService() {
-            _gw2Client = new Gw2Client();
-            RefreshClient();
+    internal Gw2MumbleService() {
+        _gw2Client = new Gw2Client();
+        RefreshClient();
 
-            this.Info            = new Info(this);
-            this.PlayerCharacter = new PlayerCharacter(this);
-            this.PlayerCamera    = new PlayerCamera(this);
-            this.CurrentMap      = new CurrentMap(this);
-            this.UI              = new UI(this);
-        }
+        this.Info            = new Info(this);
+        this.PlayerCharacter = new PlayerCharacter(this);
+        this.PlayerCamera    = new PlayerCamera(this);
+        this.CurrentMap      = new CurrentMap(this);
+        this.UI              = new UI(this);
+    }
 
-        protected override void Initialize() { /* NOOP */ }
+    protected override void Initialize() { /* NOOP */ }
 
-        protected override void Load() {
-            GameService.GameIntegration.Gw2Instance.Gw2Started += GameIntegrationOnGw2Started;
-        }
+    protected override void Load() {
+        GameIntegration.Gw2Instance.Gw2Started += GameIntegrationOnGw2Started;
+    }
 
-        private void GameIntegrationOnGw2Started(object sender, EventArgs e) {
-            RefreshClient();
-        }
+    private void GameIntegrationOnGw2Started(object sender, EventArgs e) {
+        RefreshClient();
+    }
 
-        internal void RefreshClient() {
-            this.RawClient = GetRawClient();
-        }
+    internal void RefreshClient() {
+        this.RawClient = GetRawClient();
+    }
 
-        protected override void Update(GameTime gameTime) {
-            this.TimeSinceTick += gameTime.ElapsedGameTime;
+    protected override void Update(GameTime gameTime) {
+        this.TimeSinceTick += gameTime.ElapsedGameTime;
 
-            this.RawClient.Update();
+        this.RawClient.Update();
 
-            if (this.RawClient.Tick > _prevTick) {
-                _prevTick = this.RawClient.Tick;
+        if (this.RawClient.Tick > _prevTick) {
+            _prevTick = this.RawClient.Tick;
 
-                this.TimeSinceTick = TimeSpan.Zero;
+            this.TimeSinceTick = TimeSpan.Zero;
 
-                _delayedTicks = 0;
+            _delayedTicks = 0;
 
-                UpdateDetails(gameTime);
-            } else {
-                _delayedTicks++;
+            UpdateDetails(gameTime);
+        } else {
+            _delayedTicks++;
 
-                if (GameService.Graphics.FrameLimiter == FramerateMethod.SyncWithGame
-                    && GameService.GameIntegration.Gw2Instance.Gw2IsRunning
-                    && this.TimeSinceTick.TotalSeconds < 0.5) {
+            if (Graphics.FrameLimiter == FramerateMethod.SyncWithGame
+             && GameIntegration.Gw2Instance.Gw2IsRunning
+             && this.TimeSinceTick.TotalSeconds < 0.5) {
 
-                    BlishHud.Instance.SkipDraw();
-                }
+                BlishHud.Instance.SkipDraw();
             }
         }
+    }
 
-        private void UpdateDetails(GameTime gameTime) {
-            this.Info.Update(gameTime);
-            this.PlayerCharacter.Update(gameTime);
-            this.PlayerCamera.Update(gameTime);
-            this.CurrentMap.Update(gameTime);
-            this.UI.Update(gameTime);
-        }
+    private void UpdateDetails(GameTime gameTime) {
+        this.Info.Update(gameTime);
+        this.PlayerCharacter.Update(gameTime);
+        this.PlayerCamera.Update(gameTime);
+        this.CurrentMap.Update(gameTime);
+        this.UI.Update(gameTime);
+    }
 
-        private IGw2MumbleClient GetRawClient() {
-            this.CurrentMumbleMapName = GetLinkName();
+    private IGw2MumbleClient GetRawClient() {
+        this.CurrentMumbleMapName = GetLinkName();
             
-            var client = _gw2Client.Mumble[this.CurrentMumbleMapName];
-            client.Update(); // We update once to at least indicate that it's alive.
+        var client = _gw2Client.Mumble[this.CurrentMumbleMapName];
+        client.Update(); // We update once to at least indicate that it's alive.
 
-            return client;
+        return client;
+    }
+
+    private string GetLinkName() {
+        return ApplicationSettings.Instance.MumbleMapName ??
+               GetLinkNameFromCommandLine() ??
+               DEFAULT_MUMBLEMAPNAME;
+    }
+
+    private string GetLinkNameFromCommandLine() {
+        string commandLine = GameIntegration?.Gw2Instance?.CommandLine;
+
+        if (string.IsNullOrWhiteSpace(commandLine)) {
+            return null;
         }
 
-        private string GetLinkName() {
-            return ApplicationSettings.Instance.MumbleMapName ??
-                GetLinkNameFromCommandLine() ??
-                DEFAULT_MUMBLEMAPNAME;
+        Match m = MUMBLE_LINK_REGEX.Match(commandLine);
+        if (m.Success) {
+            return m.Groups[1].Value;
+        } else {
+            return null;
         }
+    }
 
-        private string GetLinkNameFromCommandLine() {
-            string commandLine = GameService.GameIntegration?.Gw2Instance?.CommandLine;
-
-            if (string.IsNullOrWhiteSpace(commandLine)) {
-                return null;
-            }
-
-            Match m = MUMBLE_LINK_REGEX.Match(commandLine);
-            if (m.Success) {
-                return m.Groups[1].Value;
-            } else {
-                return null;
-            }
-        }
-
-        protected override void Unload() {
-            GameService.GameIntegration.Gw2Instance.Gw2Started -= GameIntegrationOnGw2Started;
-            _gw2Client.Dispose();
-        }
-
+    protected override void Unload() {
+        GameIntegration.Gw2Instance.Gw2Started -= GameIntegrationOnGw2Started;
+        _gw2Client.Dispose();
     }
 
 }

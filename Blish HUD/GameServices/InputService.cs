@@ -1,72 +1,72 @@
 ﻿using Blish_HUD.Input;
 using Microsoft.Xna.Framework;
 
-namespace Blish_HUD {
-    public class InputService : GameService {
+namespace Blish_HUD; 
 
-        private static readonly Logger Logger = Logger.GetLogger<InputService>();
+public class InputService : GameService {
 
-        private readonly IHookManager _hookManager;
+    private static readonly Logger Logger = Logger.GetLogger<InputService>();
 
-        /// <summary>
-        /// Provides details about the current mouse state.
-        /// </summary>
-        public MouseHandler Mouse { get; }
+    private readonly IHookManager _hookManager;
 
-        /// <summary>
-        /// Provides details about the current keyboard state.
-        /// </summary>
-        public KeyboardHandler Keyboard { get; }
+    /// <summary>
+    /// Provides details about the current mouse state.
+    /// </summary>
+    public MouseHandler Mouse { get; }
 
-        public InputService() {
-            this.Mouse    = new MouseHandler();
-            this.Keyboard = new KeyboardHandler();
+    /// <summary>
+    /// Provides details about the current keyboard state.
+    /// </summary>
+    public KeyboardHandler Keyboard { get; }
 
-            if (ApplicationSettings.Instance.DebugEnabled) {
-                _hookManager = new DebugHelperHookManager();
-            } else {
-                _hookManager = new WinApiHookManager();
-            }
+    public InputService() {
+        this.Mouse    = new MouseHandler();
+        this.Keyboard = new KeyboardHandler();
+
+        if (ApplicationSettings.Instance.DebugEnabled) {
+            _hookManager = new DebugHelperHookManager();
+        } else {
+            _hookManager = new WinApiHookManager();
         }
+    }
 
-        internal void EnableHooks() {
-            if (_hookManager.EnableHook()) {
-                _hookManager.RegisterMouseHandler(Mouse.HandleInput);
-                _hookManager.RegisterKeyboardHandler(Keyboard.HandleInput);
+    internal void EnableHooks() {
+        if (_hookManager.EnableHook()) {
+            _hookManager.RegisterMouseHandler(Mouse.HandleInput);
+            _hookManager.RegisterKeyboardHandler(Keyboard.HandleInput);
 
-                this.Mouse.OnEnable();
-                this.Keyboard.OnEnable();
-            } else {
-                Logger.Error("Failed to acquire hook!");
-            }
+            this.Mouse.OnEnable();
+            this.Keyboard.OnEnable();
+        } else {
+            Logger.Error("Failed to acquire hook!");
         }
+    }
 
-        internal void DisableHooks() {
-            _hookManager.DisableHook();
-            _hookManager.UnregisterMouseHandler(Mouse.HandleInput);
-            _hookManager.UnregisterKeyboardHandler(Keyboard.HandleInput);
+    internal void DisableHooks() {
+        _hookManager.DisableHook();
+        _hookManager.UnregisterMouseHandler(Mouse.HandleInput);
+        _hookManager.UnregisterKeyboardHandler(Keyboard.HandleInput);
 
-            this.Mouse.OnDisable();
-            this.Keyboard.OnDisable();
-        }
+        this.Mouse.OnDisable();
+        this.Keyboard.OnDisable();
+    }
 
-        protected override void Initialize() { /* NOOP */ }
+    protected override void Initialize() { /* NOOP */ }
 
-        protected override void Load() {
-            _hookManager.Load();
-            GameIntegration.Gw2Instance.Gw2AcquiredFocus += (s, e) => EnableHooks();
-            GameIntegration.Gw2Instance.Gw2LostFocus     += (s, e) => DisableHooks();
-            GameIntegration.Gw2Instance.Gw2Closed        += (s, e) => DisableHooks();
-        }
+    protected override void Load() {
+        _hookManager.Load();
+        GameIntegration.Gw2Instance.Gw2AcquiredFocus += (_, _) => EnableHooks();
+        GameIntegration.Gw2Instance.Gw2LostFocus     += (_, _) => DisableHooks();
+        GameIntegration.Gw2Instance.Gw2Closed        += (_, _) => DisableHooks();
+    }
 
-        protected override void Unload() {
-            DisableHooks();
-            _hookManager.Unload();
-        }
+    protected override void Unload() {
+        DisableHooks();
+        _hookManager.Unload();
+    }
 
-        protected override void Update(GameTime gameTime) {
-            Mouse.Update();
-            Keyboard.Update();
-        }
+    protected override void Update(GameTime gameTime) {
+        Mouse.Update();
+        Keyboard.Update();
     }
 }

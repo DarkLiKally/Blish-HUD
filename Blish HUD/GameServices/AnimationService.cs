@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace Blish_HUD {
-    public class AnimationService:GameService {
+namespace Blish_HUD; 
 
-        public Glide.Tweener Tweener { get; private set; }
+public class AnimationService:GameService {
 
-        protected override void Initialize() {
-            Glide.Tween.TweenerImpl.SetLerper<Library.Glide.CustomLerpers.PointLerper>(typeof(Point));
+    public Glide.Tweener Tweener { get; private set; }
 
-            this.Tweener = new Glide.Tweener();
-        }
+    protected override void Initialize() {
+        Glide.Tween.TweenerImpl.SetLerper<Library.Glide.CustomLerpers.PointLerper>(typeof(Point));
 
-        protected override void Load() { /* NOOP */ }
+        this.Tweener = new Glide.Tweener();
+    }
 
-        protected override void Unload() { /* NOOP */ }
+    protected override void Load() { /* NOOP */ }
 
-        protected override void Update(GameTime gameTime) {
-            this.Tweener.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-        }
+    protected override void Unload() { /* NOOP */ }
+
+    protected override void Update(GameTime gameTime) {
+        this.Tweener.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
     }
 }

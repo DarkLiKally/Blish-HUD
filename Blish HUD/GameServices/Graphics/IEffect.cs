@@ -1,14 +1,14 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Blish_HUD.Graphics {
-    public interface IEffect : IDisposable {
+namespace Blish_HUD.Graphics; 
 
-        EffectTechnique CurrentTechnique { get; set; }
+public interface IEffect : IDisposable {
 
-        EffectParameterCollection Parameters { get; }
+    EffectTechnique CurrentTechnique { get; set; }
 
-        EffectTechniqueCollection Techniques { get; }
+    EffectParameterCollection Parameters { get; }
 
-    }
+    EffectTechniqueCollection Techniques { get; }
+
 }

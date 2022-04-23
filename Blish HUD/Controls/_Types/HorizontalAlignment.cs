@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Blish_HUD.Controls; 
 
-namespace Blish_HUD.Controls {
-    public enum HorizontalAlignment {
-        Left,
-        Center,
-        Right
-    }
+public enum HorizontalAlignment {
+    Left,
+    Center,
+    Right
 }

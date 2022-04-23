@@ -1,18 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Blish_HUD.Controls {
-    public class LoadingSpinner : Control {
+namespace Blish_HUD.Controls; 
 
-        private const int DRAWLENGTH = 64;
+public class LoadingSpinner : Control {
 
-        public LoadingSpinner() {
-            this.Size = new Point(DRAWLENGTH, DRAWLENGTH);
-        }
+    private const int DRAWLENGTH = 64;
 
-        protected override void Paint(SpriteBatch spriteBatch, Rectangle bounds) {
-            LoadingSpinnerUtil.DrawLoadingSpinner(this, spriteBatch, bounds);
-        }
-
+    public LoadingSpinner() {
+        this.Size = new Point(DRAWLENGTH, DRAWLENGTH);
     }
+
+    protected override void Paint(SpriteBatch spriteBatch, Rectangle bounds) {
+        LoadingSpinnerUtil.DrawLoadingSpinner(this, spriteBatch, bounds);
+    }
+
 }

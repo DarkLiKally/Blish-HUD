@@ -8,7 +8,7 @@ namespace Blish_HUD.Debug;
 
 public static class Contingency {
 
-    private const string DISCORD_JOIN_URL = "http://link.blishhud.com/discordhelp";
+    private const string DISCORD_JOIN_URL = "https://link.blishhud.com/discordhelp";
 
     private static readonly HashSet<string> _contingency = new();
 
@@ -44,7 +44,7 @@ public static class Contingency {
             notifDiag.Buttons.Add(actions.Button);
         }
 
-        notifDiag.ButtonClicked += async (sender, e) => {
+        notifDiag.ButtonClicked += async (_, e) => {
             foreach (var action in extraActions) {
                 if (e.Item == action.Button) {
                     await action.OnClick.Invoke();
@@ -63,7 +63,7 @@ public static class Contingency {
         NotifyContingency(nameof(NotifyWin32AccessDenied),
                           Strings.GameServices.Debug.ContingencyMessages.Win32AccessDenied_Title,
                           Strings.GameServices.Debug.ContingencyMessages.Win32AccessDenied_Description,
-                          "http://link.blishhud.com/win32accessdenied");
+                          "https://link.blishhud.com/win32accessdenied");
     }
 
     internal static void NotifyArcDpsSameDir() {

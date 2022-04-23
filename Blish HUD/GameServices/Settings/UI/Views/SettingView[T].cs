@@ -3,88 +3,88 @@ using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Blish_HUD.Settings.UI.Presenters;
 
-namespace Blish_HUD.Settings.UI.Views {
-    public abstract class SettingView<TSetting> : View {
+namespace Blish_HUD.Settings.UI.Views; 
 
-        public event EventHandler<ValueEventArgs<TSetting>> ValueChanged;
+public abstract class SettingView<TSetting> : View {
 
-        protected void OnValueChanged(ValueEventArgs<TSetting> e) => this.ValueChanged?.Invoke(this, e);
+    public event EventHandler<ValueEventArgs<TSetting>> ValueChanged;
 
-        private readonly int _definedWidth;
+    protected void OnValueChanged(ValueEventArgs<TSetting> e) => this.ValueChanged?.Invoke(this, e);
 
-        private string   _displayName;
-        private string   _description;
-        private TSetting _value;
+    private readonly int _definedWidth;
 
-        public Func<TSetting, SettingValidationResult> ValidationFunc { get; set; }
+    private string   _displayName;
+    private string   _description;
+    private TSetting _value;
 
-        public string DisplayName {
-            get => _displayName;
-            set {
-                if (_displayName == value) return;
+    public Func<TSetting, SettingValidationResult> ValidationFunc { get; set; }
 
-                RefreshDisplayName(_displayName = value);
-            }
+    public string DisplayName {
+        get => _displayName;
+        set {
+            if (_displayName == value) return;
+
+            RefreshDisplayName(_displayName = value);
         }
-
-        public string Description {
-            get => _description;
-            set {
-                if (_description == value) return;
-
-                RefreshDescription(_description = value);
-            }
-        }
-
-        protected int DefinedWidth => _definedWidth;
-
-        public TSetting Value {
-            get => _value;
-            set => RefreshValue(_value = value);
-        }
-
-        protected SettingView(SettingEntry<TSetting> setting, int definedWidth) {
-            _definedWidth = definedWidth;
-            _value = setting.Value;
-
-            this.WithPresenter(new SettingPresenter<TSetting>(this, setting));
-        }
-
-        protected sealed override void Build(Container buildPanel) {
-            if (_definedWidth > 0) {
-                buildPanel.Width = _definedWidth;
-            }
-
-            BuildSetting(buildPanel);
-
-            Refresh();
-        }
-
-        protected abstract void BuildSetting(Container buildPanel);
-
-        public virtual bool HandleComplianceRequisite(IComplianceRequisite complianceRequisite) {
-            return false;
-        }
-
-        public void HandleBaseComplianceRequisite(IComplianceRequisite complianceRequisite) {
-            switch (complianceRequisite) {
-                case SettingValidationComplianceRequisite<TSetting> validationRequisite:
-                    this.ValidationFunc = validationRequisite.ValidationFunc;
-                    break;
-            }
-        }
-
-        private void Refresh() {
-            RefreshDisplayName(_displayName);
-            RefreshDescription(_description);
-            RefreshValue(_value);
-        }
-
-        protected abstract void RefreshDisplayName(string displayName);
-
-        protected abstract void RefreshDescription(string description);
-
-        protected abstract void RefreshValue(TSetting value);
-
     }
+
+    public string Description {
+        get => _description;
+        set {
+            if (_description == value) return;
+
+            RefreshDescription(_description = value);
+        }
+    }
+
+    protected int DefinedWidth => _definedWidth;
+
+    public TSetting Value {
+        get => _value;
+        set => RefreshValue(_value = value);
+    }
+
+    protected SettingView(SettingEntry<TSetting> setting, int definedWidth) {
+        _definedWidth = definedWidth;
+        _value        = setting.Value;
+
+        this.WithPresenter(new SettingPresenter<TSetting>(this, setting));
+    }
+
+    protected sealed override void Build(Container buildPanel) {
+        if (_definedWidth > 0) {
+            buildPanel.Width = _definedWidth;
+        }
+
+        BuildSetting(buildPanel);
+
+        Refresh();
+    }
+
+    protected abstract void BuildSetting(Container buildPanel);
+
+    public virtual bool HandleComplianceRequisite(IComplianceRequisite complianceRequisite) {
+        return false;
+    }
+
+    public void HandleBaseComplianceRequisite(IComplianceRequisite complianceRequisite) {
+        switch (complianceRequisite) {
+            case SettingValidationComplianceRequisite<TSetting> validationRequisite:
+                this.ValidationFunc = validationRequisite.ValidationFunc;
+                break;
+        }
+    }
+
+    private void Refresh() {
+        RefreshDisplayName(_displayName);
+        RefreshDescription(_description);
+        RefreshValue(_value);
+    }
+
+    protected abstract void RefreshDisplayName(string displayName);
+
+    protected abstract void RefreshDescription(string description);
+
+    protected abstract void RefreshValue(TSetting value);
+
 }

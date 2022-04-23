@@ -17,7 +17,7 @@ public class Panel : Container, IAccordion {
 
     public static readonly DesignStandard MenuStandard = new(/*          Size */ new Point(265, 700),
                                                              /*   PanelOffset */ new Point(9,   28),
-                                                             /* ControlOffset */ Control.ControlStandard.ControlOffset);
+                                                             /* ControlOffset */ ControlStandard.ControlOffset);
 
     // Used when border is enabled
     public const int TOP_PADDING    = 7;
@@ -274,7 +274,7 @@ public class Panel : Container, IAccordion {
 
             _scrollbarBindings = new List<Binding> {
                 Binding.CreateOneWayBinding(() => _panelScrollbar.Parent,  () => this.Parent,  applyLeft: true),
-                Binding.CreateOneWayBinding(() => _panelScrollbar.Height,  () => this.Height,  (h) => this.ContentRegion.Height - 20,                          applyLeft: true),
+                Binding.CreateOneWayBinding(() => _panelScrollbar.Height,  () => this.Height,  (_) => this.ContentRegion.Height - 20,                          applyLeft: true),
                 Binding.CreateOneWayBinding(() => _panelScrollbar.Right,   () => this.Right,   (r) => r                         - _panelScrollbar.Width / 2,   applyLeft: true),
                 Binding.CreateOneWayBinding(() => _panelScrollbar.Top,     () => this.Top,     (t) => t                         + this.ContentRegion.Top + 10, applyLeft: true),
                 Binding.CreateOneWayBinding(() => _panelScrollbar.Visible, () => this.Visible, applyLeft: true),
