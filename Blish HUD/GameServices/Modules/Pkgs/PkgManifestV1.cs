@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-namespace Blish_HUD.Modules.Pkgs {
-    public class PkgManifestV1 : PkgManifest {
+namespace Blish_HUD.Modules.Pkgs; 
 
-        public override SupportedModulePkgVersion ManifestVersion => SupportedModulePkgVersion.V1;
+public class PkgManifestV1 : PkgManifest {
 
-        [JsonProperty("url")]
-        public string Url { get; set; }
+    public override SupportedModulePkgVersion ManifestVersion => SupportedModulePkgVersion.V1;
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
+    [JsonProperty("url")]
+    public string Url { get; set; }
 
-    }
+    [JsonProperty("description")]
+    public string Description { get; set; }
+
 }

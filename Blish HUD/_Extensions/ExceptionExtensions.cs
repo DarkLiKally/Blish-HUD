@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Blish_HUD._Extensions {
-    internal static class ExceptionExtensions {
+namespace Blish_HUD._Extensions; 
 
-        public static Exception GetBaseException(this Exception exception) {
-            return exception.InnerException == null 
-                       ? exception 
-                       : exception.InnerException.GetBaseException();
-        }
+internal static class ExceptionExtensions {
 
+    public static Exception GetBaseException(this Exception exception) {
+        return exception.InnerException == null 
+                   ? exception 
+                   : exception.InnerException.GetBaseException();
     }
+
 }

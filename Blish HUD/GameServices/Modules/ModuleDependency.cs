@@ -5,86 +5,84 @@ using System.Collections.Generic;
 using Range = SemVer.Range;
 using Version = SemVer.Version;
 
-namespace Blish_HUD.Modules {
+namespace Blish_HUD.Modules; 
 
-    public class ModuleDependency {
+public class ModuleDependency {
 
-        private const string BLISHHUD_DEPENDENCY_NAME = "bh.blishhud";
+    private const string BLISHHUD_DEPENDENCY_NAME = "bh.blishhud";
 
-        internal class VersionDependenciesConverter : JsonConverter<List<ModuleDependency>> {
+    internal class VersionDependenciesConverter : JsonConverter<List<ModuleDependency>> {
 
-            public override void WriteJson(JsonWriter writer, List<ModuleDependency> value, JsonSerializer serializer) {
-                writer.WriteStartObject();
+        public override void WriteJson(JsonWriter writer, List<ModuleDependency> value, JsonSerializer serializer) {
+            writer.WriteStartObject();
 
-                foreach (var dependency in value) {
-                    writer.WritePropertyName(dependency.Namespace);
-                    writer.WriteValue(dependency.VersionRange.ToString());
-                }
-
-                writer.WriteEndObject();
+            foreach (var dependency in value) {
+                writer.WritePropertyName(dependency.Namespace);
+                writer.WriteValue(dependency.VersionRange.ToString());
             }
 
-            public override List<ModuleDependency> ReadJson(JsonReader reader, Type objectType, List<ModuleDependency> existingValue, bool hasExistingValue, JsonSerializer serializer) {
-                if (reader.TokenType == JsonToken.Null) return null;
+            writer.WriteEndObject();
+        }
 
-                var moduleDependencyList = new List<ModuleDependency>();
+        public override List<ModuleDependency> ReadJson(JsonReader reader, Type objectType, List<ModuleDependency> existingValue, bool hasExistingValue, JsonSerializer serializer) {
+            if (reader.TokenType == JsonToken.Null) return null;
 
-                JObject mdObj = JObject.Load(reader);
+            var moduleDependencyList = new List<ModuleDependency>();
 
-                foreach (var prop in mdObj) {
-                    string dependencyNamespace    = prop.Key;
-                    string dependencyVersionRange = prop.Value.ToString();
+            JObject mdObj = JObject.Load(reader);
 
-                    moduleDependencyList.Add(new ModuleDependency() {
-                        Namespace    = dependencyNamespace,
-                        VersionRange = new Range(dependencyVersionRange)
-                    });
+            foreach (var prop in mdObj) {
+                string dependencyNamespace    = prop.Key;
+                string dependencyVersionRange = prop.Value.ToString();
+
+                moduleDependencyList.Add(new ModuleDependency() {
+                    Namespace    = dependencyNamespace,
+                    VersionRange = new Range(dependencyVersionRange)
+                });
+            }
+
+            return moduleDependencyList;
+        }
+    }
+
+    public string Namespace { get; private set; }
+
+    public Range VersionRange { get; private set; }
+
+    public bool IsBlishHud => string.Equals(this.Namespace, BLISHHUD_DEPENDENCY_NAME, StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Calculates the current details of the dependency.
+    /// </summary>
+    public ModuleDependencyCheckDetails GetDependencyDetails() {
+        // Check against Blish HUD version
+        if (this.IsBlishHud) {
+            return new ModuleDependencyCheckDetails(this,
+                                                    this.VersionRange.IsSatisfied(Program.OverlayVersion.BaseVersion())
+                                                 || Program.OverlayVersion.BaseVersion() == new Version(0, 0, 0) // Ensure local builds ignore prerequisite
+                                                        ? ModuleDependencyCheckResult.Available
+                                                        : ModuleDependencyCheckResult.AvailableWrongVersion);
+        }
+
+        // Check for module dependency
+        foreach (var module in GameService.Module.Modules) {
+            if (string.Equals(this.Namespace, module.Manifest.Namespace, StringComparison.OrdinalIgnoreCase)) {
+                if (this.VersionRange.IsSatisfied(module.Manifest.Version.BaseVersion())) {
+                    // Module exists and is a valid version
+                    return new ModuleDependencyCheckDetails(this,
+                                                            module.Enabled
+                                                                ? ModuleDependencyCheckResult.Available
+                                                                : ModuleDependencyCheckResult.AvailableNotEnabled,
+                                                            module);
                 }
 
-                return moduleDependencyList;
+                // Module exists but is the wrong version
+                return new ModuleDependencyCheckDetails(this, ModuleDependencyCheckResult.AvailableWrongVersion, module);
             }
         }
 
-        public string Namespace { get; private set; }
-
-        public Range VersionRange { get; private set; }
-
-        public bool IsBlishHud => string.Equals(this.Namespace, BLISHHUD_DEPENDENCY_NAME, StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
-        /// Calculates the current details of the dependency.
-        /// </summary>
-        public ModuleDependencyCheckDetails GetDependencyDetails() {
-            // Check against Blish HUD version
-            if (this.IsBlishHud) {
-                return new ModuleDependencyCheckDetails(this,
-                                                        this.VersionRange.IsSatisfied(Program.OverlayVersion.BaseVersion())
-                                                        || Program.OverlayVersion.BaseVersion() == new Version(0, 0, 0) // Ensure local builds ignore prerequisite
-                                                            ? ModuleDependencyCheckResult.Available
-                                                            : ModuleDependencyCheckResult.AvailableWrongVersion);
-            }
-
-            // Check for module dependency
-            foreach (var module in GameService.Module.Modules) {
-                if (string.Equals(this.Namespace, module.Manifest.Namespace, StringComparison.OrdinalIgnoreCase)) {
-                    if (this.VersionRange.IsSatisfied(module.Manifest.Version.BaseVersion())) {
-                        // Module exists and is a valid version
-                        return new ModuleDependencyCheckDetails(this,
-                                                                module.Enabled
-                                                                    ? ModuleDependencyCheckResult.Available
-                                                                    : ModuleDependencyCheckResult.AvailableNotEnabled,
-                                                                module);
-                    }
-
-                    // Module exists but is the wrong version
-                    return new ModuleDependencyCheckDetails(this, ModuleDependencyCheckResult.AvailableWrongVersion, module);
-                }
-            }
-
-            // No module could be found that matches
-            return new ModuleDependencyCheckDetails(this, ModuleDependencyCheckResult.NotFound);
-        }
-
+        // No module could be found that matches
+        return new ModuleDependencyCheckDetails(this, ModuleDependencyCheckResult.NotFound);
     }
 
 }
