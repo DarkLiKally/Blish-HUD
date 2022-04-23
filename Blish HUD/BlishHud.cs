@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -60,7 +59,7 @@ namespace Blish_HUD {
             Form       = Control.FromHandle(FormHandle).FindForm();
 
             // Avoid the flash the window shows when the application launches
-            Form.Location  = new System.Drawing.Point(-Form.Width * 2, -Form.Height * 2);
+            Form.Location = new System.Drawing.Point(-Form.Width * 2, -Form.Height * 2);
 
             this.Window.IsBorderless = true;
             this.Window.AllowAltF4   = false;
@@ -162,4 +161,5 @@ namespace Blish_HUD {
             base.Draw(gameTime);
         }
     }
+
 }

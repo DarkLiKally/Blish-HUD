@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Blish_HUD.GameServices.Content {
+﻿namespace Blish_HUD.GameServices.Content {
     public enum RenderServiceTextureSize {
         /// <summary>
         /// When using an alternative render service, the texture will be requested to return as 64x64.

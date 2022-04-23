@@ -1,5 +1,4 @@
-﻿using System;
-using MonoGame.Extended;
+﻿using MonoGame.Extended;
 
 namespace Blish_HUD {
     public static class RandomUtil {

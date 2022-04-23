@@ -138,8 +138,8 @@ namespace Blish_HUD.ArcDps {
         }
 
         private void ProcessReceivedData(
-            int            dataStartOffset, int    totalReceivedDataSize, int alreadyProcessedDataSize,
-            AsyncUserToken token,           byte[] buffer
+            int dataStartOffset, int totalReceivedDataSize, int alreadyProcessedDataSize,
+            AsyncUserToken token, byte[] buffer
         ) {
             while (true) {
                 if (alreadyProcessedDataSize >= totalReceivedDataSize) {

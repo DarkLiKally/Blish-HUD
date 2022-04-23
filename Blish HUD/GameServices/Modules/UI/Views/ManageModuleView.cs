@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Version = SemVer.Version;
 
 namespace Blish_HUD.Modules.UI.Views {
+
     public class ManageModuleView : View {
 
         public event EventHandler<EventArgs> EnableModuleClicked;
@@ -40,7 +41,7 @@ namespace Blish_HUD.Modules.UI.Views {
 
         private GlowButton _settingsButton;
 
-        private readonly Dictionary<ModuleRunState, (string Status, Color color)> _moduleStatusLookup = new Dictionary<ModuleRunState, (string Status, Color color)> {
+        private readonly Dictionary<ModuleRunState, (string Status, Color color)> _moduleStatusLookup = new() {
             {ModuleRunState.Unloaded, (Strings.GameServices.ModulesService.ModuleState_Disabled, Control.StandardColors.DisabledText)},
             {ModuleRunState.Loading, (Strings.GameServices.ModulesService.ModuleState_Loading, Control.StandardColors.Yellow)},
             {ModuleRunState.Loaded, (Strings.GameServices.ModulesService.ModuleState_Enabled, Color.FromNonPremultiplied(0, 255, 25, 255))},
@@ -218,7 +219,7 @@ namespace Blish_HUD.Modules.UI.Views {
 
             _authorImage = new Image() {
                 Location = new Point(_moduleNameLabel.Left, _moduleNameLabel.Bottom),
-                Size     = new Point(32,               32),
+                Size     = new Point(32,                    32),
                 Parent   = buildPanel
             };
 
@@ -265,7 +266,7 @@ namespace Blish_HUD.Modules.UI.Views {
 
             _collapsePanel = new Panel() {
                 Size      = new Point(buildPanel.Width, buildPanel.Height - _moduleNameLabel.Bottom + 32 + 4),
-                Location  = new Point(0,                _moduleNameLabel.Bottom + 32                     + 4),
+                Location  = new Point(0,                _moduleNameLabel.Bottom                     + 32 + 4),
                 CanScroll = true,
                 Parent    = buildPanel
             };
@@ -300,7 +301,7 @@ namespace Blish_HUD.Modules.UI.Views {
 
             _dependencyView = new ViewContainer() {
                 Size     = new Point(_descriptionPanel.Width - _permissionView.Right - Panel.MenuStandard.ControlOffset.X / 2, _permissionView.Height),
-                Location = new Point(_permissionView.Right                           + Panel.MenuStandard.ControlOffset.X / 2, _permissionView.Top),
+                Location = new Point(_permissionView.Right   + Panel.MenuStandard.ControlOffset.X                         / 2, _permissionView.Top),
                 Parent   = _collapsePanel
             };
 
@@ -311,7 +312,7 @@ namespace Blish_HUD.Modules.UI.Views {
                 ShowBorder = true,
                 Title      = Strings.GameServices.ModulesService.ModuleManagement_ModuleSettings,
                 Size       = new Point(_dependencyView.Right - _permissionView.Left - 10, 320),
-                Location   = new Point(_permissionView.Left,                         _permissionView.Bottom + Panel.MenuStandard.ControlOffset.Y),
+                Location   = new Point(_permissionView.Left,                              _permissionView.Bottom + Panel.MenuStandard.ControlOffset.Y),
                 Parent     = _collapsePanel
             };
 
@@ -357,4 +358,5 @@ namespace Blish_HUD.Modules.UI.Views {
         }
 
     }
+
 }

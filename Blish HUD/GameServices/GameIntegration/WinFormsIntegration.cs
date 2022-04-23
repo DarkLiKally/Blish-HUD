@@ -78,7 +78,7 @@ namespace Blish_HUD.GameIntegration {
             _openBlishSettingsFolder = this.TrayIconMenu.Items.Add(Strings.GameServices.GameIntegrationService.TrayIcon_OpenSettingsFolder);
 
             _openBlishSettingsFolder.Click += delegate {
-                Process.Start(DirectoryUtil.BasePath);
+                Process.Start("explorer.exe", DirectoryUtil.BasePath);
             };
 
             this.TrayIconMenu.Items.Add(new ToolStripSeparator());

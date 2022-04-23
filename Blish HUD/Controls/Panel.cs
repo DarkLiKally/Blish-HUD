@@ -15,9 +15,9 @@ namespace Blish_HUD.Controls {
     /// </summary>
     public class Panel : Container, IAccordion {
 
-        public static readonly DesignStandard MenuStandard = new DesignStandard(/*          Size */ new Point(265, 700),
-                                                                                /*   PanelOffset */ new Point(9, 28),
-                                                                                /* ControlOffset */ Control.ControlStandard.ControlOffset);
+        public static readonly DesignStandard MenuStandard = new(/*          Size */ new Point(265, 700),
+                                                                 /*   PanelOffset */ new Point(9,   28),
+                                                                 /* ControlOffset */ Control.ControlStandard.ControlOffset);
 
         // Used when border is enabled
         public const int TOP_PADDING    = 7;
@@ -152,7 +152,7 @@ namespace Blish_HUD.Controls {
             base.OnChildAdded(e);
 
             e.ChangedChild.Resized += UpdateContentRegionBounds;
-            e.ChangedChild.Moved += UpdateContentRegionBounds;
+            e.ChangedChild.Moved   += UpdateContentRegionBounds;
         }
 
         protected override void OnChildRemoved(ChildChangedEventArgs e) {
@@ -242,13 +242,13 @@ namespace Blish_HUD.Controls {
 
                 // Left side accent
                 _layoutLeftAccentBounds = new Rectangle(leftOffset - 7, topOffset, _textureLeftSideAccent.Width, Math.Min(_size.Y - topOffset - bottomOffset, _textureLeftSideAccent.Height));
-                _layoutLeftAccentSrc    = new Rectangle(0,  0,         _textureLeftSideAccent.Width, _layoutLeftAccentBounds.Height);
+                _layoutLeftAccentSrc    = new Rectangle(0,              0,         _textureLeftSideAccent.Width, _layoutLeftAccentBounds.Height);
             }
 
             this.ContentRegion = new Rectangle(leftOffset,
                                                topOffset,
                                                _size.X - leftOffset - rightOffset,
-                                               _size.Y - topOffset - bottomOffset);
+                                               _size.Y - topOffset  - bottomOffset);
 
             _layoutHeaderBounds     = new Rectangle(this.ContentRegion.Left,       0, this.ContentRegion.Width,       HEADER_HEIGHT);
             _layoutHeaderTextBounds = new Rectangle(_layoutHeaderBounds.Left + 10, 0, _layoutHeaderBounds.Width - 10, HEADER_HEIGHT);
@@ -260,7 +260,7 @@ namespace Blish_HUD.Controls {
                                                         ARROW_SIZE).OffsetBy(_layoutAccordionArrowOrigin.ToPoint());
         }
 
-        private List<Binding> _scrollbarBindings = new List<Adhesive.Binding>();
+        private List<Binding> _scrollbarBindings = new();
 
         private void UpdateScrollbar() {
             /* TODO: Fix .CanScroll: currently you have to set it after you set other region changing settings for it
@@ -274,9 +274,9 @@ namespace Blish_HUD.Controls {
 
                 _scrollbarBindings = new List<Binding> {
                     Binding.CreateOneWayBinding(() => _panelScrollbar.Parent,  () => this.Parent,  applyLeft: true),
-                    Binding.CreateOneWayBinding(() => _panelScrollbar.Height,  () => this.Height,  (h) => this.ContentRegion.Height  - 20,                        applyLeft: true),
-                    Binding.CreateOneWayBinding(() => _panelScrollbar.Right,   () => this.Right,   (r) => r                          - _panelScrollbar.Width / 2, applyLeft: true),
-                    Binding.CreateOneWayBinding(() => _panelScrollbar.Top,     () => this.Top,     (t) => t + this.ContentRegion.Top + 10,                        applyLeft: true),
+                    Binding.CreateOneWayBinding(() => _panelScrollbar.Height,  () => this.Height,  (h) => this.ContentRegion.Height - 20,                          applyLeft: true),
+                    Binding.CreateOneWayBinding(() => _panelScrollbar.Right,   () => this.Right,   (r) => r                         - _panelScrollbar.Width / 2,   applyLeft: true),
+                    Binding.CreateOneWayBinding(() => _panelScrollbar.Top,     () => this.Top,     (t) => t                         + this.ContentRegion.Top + 10, applyLeft: true),
                     Binding.CreateOneWayBinding(() => _panelScrollbar.Visible, () => this.Visible, applyLeft: true),
                     Binding.CreateOneWayBinding(() => _panelScrollbar.ZIndex,  () => this.ZIndex,  (z) => z + 2, applyLeft: true)
                 };
@@ -380,4 +380,5 @@ namespace Blish_HUD.Controls {
         }
 
     }
+
 }

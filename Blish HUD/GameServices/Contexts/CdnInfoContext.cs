@@ -36,7 +36,7 @@ namespace Blish_HUD.Contexts {
                 _manifestFileSize = manifestFileSize;
             }
 
-            public static CdnInfo Invalid => new CdnInfo(-1, -1, -1, -1, -1);
+            public static CdnInfo Invalid => new(-1, -1, -1, -1, -1);
 
         }
 
@@ -116,7 +116,7 @@ namespace Blish_HUD.Contexts {
                 return await cdnUrl.GetStringAsync();
             } catch (FlurlHttpException ex) {
                 if (ex.Call.Response != null) {
-                    Logger.Warn(ex, "Failed to get CDN information from {cdnUrl}.  HTTP response status was ({httpStatusCode}) {statusReason}.", cdnUrl, (int)ex.Call.Response.StatusCode, ex.Call.Response.ReasonPhrase);
+                    Logger.Warn(ex, "Failed to get CDN information from {cdnUrl}.  HTTP response status was ({httpStatusCode}) {statusReason}.", cdnUrl, ex.Call.Response.StatusCode, ex.Call.Response.ReasonPhrase);
                 } else {
                     Logger.Warn(ex, "Failed to get CDN information from {cdnUrl}.  No response was received.", cdnUrl);
                 }

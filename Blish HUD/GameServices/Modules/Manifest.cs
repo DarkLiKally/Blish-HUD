@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Gw2Sharp.WebApi.V2.Models;
 using JsonSubTypes;
 using Newtonsoft.Json;
@@ -51,7 +51,7 @@ namespace Blish_HUD.Modules {
         public bool EnabledWithoutGW2 { get; private set; }
 
         [JsonProperty("api_permissions")]
-        public Dictionary<TokenPermission, ModuleApiPermissions> ApiPermissions { get; private set; } = new Dictionary<TokenPermission, ModuleApiPermissions>();
+        public Dictionary<TokenPermission, ModuleApiPermissions> ApiPermissions { get; private set; } = new();
 
         protected Manifest() {
             // Ensure nothing is empty, regardless of manifest version and contents
@@ -69,7 +69,5 @@ namespace Blish_HUD.Modules {
         public virtual string GetDetailedName() {
             return $"{this.Name} ({this.Namespace}) v{this.Version}";
         }
-
     }
-
 }

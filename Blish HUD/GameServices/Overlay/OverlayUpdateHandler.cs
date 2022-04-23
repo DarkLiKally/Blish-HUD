@@ -9,6 +9,7 @@ using Blish_HUD.Settings;
 using Flurl.Http;
 
 namespace Blish_HUD.Overlay {
+
     public class OverlayUpdateHandler : ServiceModule<OverlayService> {
 
         private static readonly Logger Logger = Logger.GetLogger<OverlayUpdateHandler>();
@@ -40,7 +41,7 @@ namespace Blish_HUD.Overlay {
         private SelfUpdateWindow _activeUpdateWindow;
 
         /// <summary>
-        /// The highest version release.  Will include prereleases only if <see cref="PrereleasesVisible"/> is <c>true</c>.
+        /// The highest version release.  Will include prereleases only if <see cref="OverlayService.ShowPreviews"/> is <c>true</c>.
         /// </summary>
         public CoreVersionManifest LatestRelease => _availableUpdates.Where(manifest => manifest.IsPrerelease == GameService.Overlay.ShowPreviews.Value)
                                                                      .OrderByDescending(manifest => manifest.Version)
@@ -61,18 +62,18 @@ namespace Blish_HUD.Overlay {
         private void BeginLoadReleases(string versionsUrl) {
             versionsUrl.GetJsonAsync<CoreVersionManifest[]>()
                        .ContinueWith(async coreVersionManifestTask => {
-                             if (coreVersionManifestTask.Exception == null) {
-                                 HandleLoadingReleases(coreVersionManifestTask.Result);
-                             } else if (_releaseLoadAttemptsRemaining <= 0) {
-                                 Logger.Warn(coreVersionManifestTask.Exception, "Failed to load list of release versions from '{0}'.", versionsUrl);
-                             } else {
-                                 // We're gonna try again in case it was just a blip
-                                 _releaseLoadAttemptsRemaining--;
+                            if (coreVersionManifestTask.Exception == null) {
+                                HandleLoadingReleases(coreVersionManifestTask.Result);
+                            } else if (_releaseLoadAttemptsRemaining <= 0) {
+                                Logger.Warn(coreVersionManifestTask.Exception, "Failed to load list of release versions from '{0}'.", versionsUrl);
+                            } else {
+                                // We're gonna try again in case it was just a blip
+                                _releaseLoadAttemptsRemaining--;
 
-                                 await Task.Delay(1000);
+                                await Task.Delay(1000);
 
-                                 BeginLoadReleases(versionsUrl);
-                             }
+                                BeginLoadReleases(versionsUrl);
+                            }
                         });
         }
 
@@ -136,4 +137,5 @@ namespace Blish_HUD.Overlay {
         }
 
     }
+
 }

@@ -13,7 +13,7 @@ namespace Blish_HUD.Modules {
 
         private static readonly Logger Logger = Logger.GetLogger<ModuleManager>();
 
-        private static readonly List<string> _dirtyNamespaces = new List<string>();
+        private static readonly List<string> _dirtyNamespaces = new();
 
         public event EventHandler<EventArgs> ModuleEnabled;
         public event EventHandler<EventArgs> ModuleDisabled;
@@ -95,6 +95,10 @@ namespace Blish_HUD.Modules {
                             this.ModuleInstance = null;
                             this.Enabled        = false;
                             Logger.Error(ex, "Module {module} failed to load because it depended on a type which is not available in this version.  Ensure you are using the correct module and Blish HUD versions.", this.Manifest.GetDetailedName());
+                        } catch (Exception ex) {
+                            this.ModuleInstance = null;
+                            this.Enabled        = false;
+                            Logger.Error(ex, "Module {module} failed to load because of an unexpected error.", this.Manifest.GetDetailedName());
                         }
                     }
                 } else {

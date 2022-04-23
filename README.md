@@ -40,16 +40,18 @@ Pull requests are welcome. You are encouraged to join the discussion in the [Bli
 
 #### Prerequisites
 
-- [Visual Studio 2019](https://visualstudio.microsoft.com/vs/)
+- [Visual Studio 2019+](https://visualstudio.microsoft.com/vs/) OR [JetBrains Rider](https://www.jetbrains.com/rider/)
 - [MonoGame development tools](https://docs.monogame.net/articles/getting_started/1_setting_up_your_development_environment_windows.html)
-- [.NET 4.7.1 Developer Pack](https://www.microsoft.com/en-us/download/details.aspx?id=56119)
+- [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [Visual C++ Redistributable 2012](https://www.microsoft.com/en-us/download/details.aspx?id=30679)
 
 #### Instructions
 
-1.  Clone the repo: `git clone https://github.com/blish-hud/Blish-HUD.git`
-2.  Launch the project solution in Visual Studio 2019.
-3.  Restore NuGet dependencies: `nuget restore`
+1. Clone the repo: `git clone https://github.com/blish-hud/Blish-HUD.git`
+2. Open the project solution in Visual Studio 2019 / Rider.
+3. Restore NuGet dependencies: `nuget restore`
+
+You can run Blish HUD for development using the included launch profiles.
 
 ### Module Development
 

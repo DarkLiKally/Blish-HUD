@@ -3,7 +3,6 @@ using System.Linq;
 using Blish_HUD.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.BitmapFonts;
 
 namespace Blish_HUD.Controls {
 

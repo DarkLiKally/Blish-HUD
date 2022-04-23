@@ -10,7 +10,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: microsoft/setup-msbuild@v1.0.2
 
       # GitVersion action doesn't support /ensureassemblyinfo, see https://github.com/GitTools/actions/issues/220
       # So we need to create a new file to let GitVersion populate it
@@ -28,12 +27,12 @@ jobs:
           updateAssemblyInfo: true
           updateAssemblyInfoFilename: Blish HUD/Properties/AssemblyVersionInfo.cs
 
-      - name: Run msbuild restore
-        run: msbuild -t:restore
-      - name: Run msbuild
-        run: msbuild -p:Configuration=Release -p:VERSIONED_BUILD=${{ steps.gitversion.outputs.semVer }}
+      - name: Run dotnet restore
+        run: dotnet restore
+      - name: Run dotnet publish
+        run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained false -p:VERSIONED_BUILD=${{ steps.gitversion.outputs.semVer }} -o publish
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
           name: Blish HUD.${{ steps.gitversion.outputs.semVer }}
-          path: Blish HUD/bin/x64/Release/net472
+          path: publish/**

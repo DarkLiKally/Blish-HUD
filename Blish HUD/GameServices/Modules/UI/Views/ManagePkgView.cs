@@ -118,7 +118,7 @@ namespace Blish_HUD.Modules.UI.Views {
         private void SetRelationIcon(PkgVersionRelationship pkgVersionRelationship) {
             switch (pkgVersionRelationship) {
                 case PkgVersionRelationship.NotInstalled:
-                    _statusImage.Visible      = false;
+                    _statusImage.Visible = false;
                     break;
                 case PkgVersionRelationship.CanUpdate:
                     _statusImage.Texture          = GameService.Content.GetTexture("common/157397");
@@ -194,10 +194,10 @@ namespace Blish_HUD.Modules.UI.Views {
             };
 
             _versionDropdown = new Dropdown() {
-                Width   = 128,
-                Right   = buildPanel.Width - 5,
-                Top     = 5,
-                Parent  = buildPanel
+                Width  = 128,
+                Right  = buildPanel.Width - 5,
+                Top    = 5,
+                Parent = buildPanel
             };
 
             _statusImage = new Image(GameService.Content.GetTexture("common/157397")) {
@@ -243,4 +243,5 @@ namespace Blish_HUD.Modules.UI.Views {
         }
 
     }
+
 }

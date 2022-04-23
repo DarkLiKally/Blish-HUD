@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Blish_HUD.Input;
 using Glide;
 using Microsoft.Xna.Framework;

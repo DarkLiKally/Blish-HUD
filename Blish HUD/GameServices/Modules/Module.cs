@@ -156,7 +156,7 @@ namespace Blish_HUD.Modules {
             this.ModuleException       = null;
         }
 
-#endregion
+        #endregion
 
         #region Virtual Methods
 

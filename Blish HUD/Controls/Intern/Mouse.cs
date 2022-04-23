@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using Blish_HUD.Controls.Extern;
 namespace Blish_HUD.Controls.Intern

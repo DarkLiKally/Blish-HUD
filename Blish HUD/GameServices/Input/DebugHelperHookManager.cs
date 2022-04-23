@@ -1,4 +1,4 @@
-﻿using Blish_HUD.DebugHelper.Models;
+using Blish_HUD.DebugHelper.Models;
 using Blish_HUD.DebugHelper.Services;
 using System;
 using System.Diagnostics;

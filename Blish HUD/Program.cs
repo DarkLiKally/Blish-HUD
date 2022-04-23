@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows.Forms;
 
 namespace Blish_HUD {
-
     /// <summary>
     /// The main class.
     /// </summary>
@@ -17,7 +16,7 @@ namespace Blish_HUD {
 
         private const string APP_GUID = "{5802208e-71ca-4745-ab1b-d851bc17a460}";
 
-        public static SemVer.Version OverlayVersion { get; } = new SemVer.Version(typeof(BlishHud).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion, true);
+        public static SemVer.Version OverlayVersion { get; } = new(typeof(BlishHud).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion, true);
 
         internal static bool RestartOnExit { get; set; } = false;
 
@@ -108,12 +107,12 @@ namespace Blish_HUD {
         }
 
         private static void RunDebugHelper(int mainProcessId) {
-            using var inStream = Console.OpenStandardInput();
+            using var inStream  = Console.OpenStandardInput();
             using var outStream = Console.OpenStandardOutput();
 
-            var processService = new ProcessService(mainProcessId);
-            using var messageService = new StreamMessageService(inStream, outStream);
-            using var mouseHookService = new MouseHookService(messageService);
+            var       processService      = new ProcessService(mainProcessId);
+            using var messageService      = new StreamMessageService(inStream, outStream);
+            using var mouseHookService    = new MouseHookService(messageService);
             using var keyboardHookService = new KeyboardHookService(messageService);
             using var inputManagerService = new InputManagerService(messageService, mouseHookService, keyboardHookService);
 

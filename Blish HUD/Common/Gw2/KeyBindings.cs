@@ -1,5 +1,4 @@
 ﻿using Blish_HUD.Input;
-using Microsoft.Xna.Framework.Input;
 
 namespace Blish_HUD.Common.Gw2 {
 
