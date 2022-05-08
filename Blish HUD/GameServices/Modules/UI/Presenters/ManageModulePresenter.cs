@@ -252,6 +252,11 @@ namespace Blish_HUD.Modules.UI.Presenters {
 
         protected override void Unload() {
             UnsubscribeFromModuleRunState();
+            
+            this.Model.ModuleDisabled -= ModelOnModuleDisabled;
+
+            this.View.EnableModuleClicked  -= ViewOnEnableModuleClicked;
+            this.View.DisableModuleClicked -= ViewOnDisableModuleClicked;
         }
 
     }

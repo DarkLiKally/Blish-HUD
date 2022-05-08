@@ -25,6 +25,7 @@ namespace Blish_HUD {
         private const string EXPORTED_VERSION_SETTING  = "ExportedOn";
 
         private const string MODULES_DIRECTORY = "modules";
+        private const string NATIVE_ASSEMBLIES_DIRECTORY = "lib";
 
         private const string MODULE_EXTENSION    = ".bhm";
         private const string MODULE_MANIFESTNAME = "manifest.json";
@@ -44,6 +45,7 @@ namespace Blish_HUD {
         private SettingCollection _moduleSettings;
 
         internal string ModulesDirectory => DirectoryUtil.RegisterDirectory(MODULES_DIRECTORY);
+        internal string NativeAssemblyDirectory => DirectoryUtil.RegisterDirectory(NATIVE_ASSEMBLIES_DIRECTORY);
 
         private SettingEntry<List<string>>                    _exportedOnVersions;
         private SettingEntry<Dictionary<string, ModuleState>> _moduleStates;
